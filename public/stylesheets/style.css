@@ -35,3 +35,11 @@ td:hover{
 	text-align: center;
 	margin: 0 auto 0 auto;
 }
+
+.activeShip{
+	color: red;
+}
+
+li.ship:hover{
+	cursor: pointer;
+}
