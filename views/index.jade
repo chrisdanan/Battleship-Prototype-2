@@ -4,6 +4,7 @@ html
 		title #{title}
 		meta(charset="utf-8")
 		meta(name="author" content="Flippin' Tables")
+		link(rel="stylesheet" type="text/css" href="stylesheets/style.css")
 	body
 		h1 Hello Vane!
 
@@ -24,9 +25,9 @@ html
 
 			- for(var i = 0; i < 10; i++){
 				tr
-					td #{letterArray[i]}
+					th #{letterArray[i]}
 					-for(var j = 1; j < 11; j++)
-						td #{j}
+						td #{letterArray[i]} #{j}
 			- }
 		script(src="http://code.jquery.com/jquery-1.11.2.min.js")
 		script(src="javascripts/app.js")
