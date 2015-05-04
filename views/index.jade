@@ -6,5 +6,27 @@ html
 		meta(name="author" content="Flippin' Tables")
 	body
 		h1 Hello Vane!
+
+		table#grid
+			tr
+				th 
+				th 1
+				th 2
+				th 3
+				th 4
+				th 5
+				th 6
+				th 7
+				th 8
+				th 9
+				th 10
+			-var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+
+			- for(var i = 0; i < 10; i++){
+				tr
+					td #{letterArray[i]}
+					-for(var j = 1; j < 11; j++)
+						td #{j}
+			- }
 		script(src="http://code.jquery.com/jquery-1.11.2.min.js")
 		script(src="javascripts/app.js")
