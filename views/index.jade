@@ -8,21 +8,22 @@ html
 	body
 		h1 Place Your Ships
 
-		table#grid
-			tr
-				th
-				- for(var i = 1; i < 11; i++)
-					th #{i}
-			- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-
-			- for(var i = 0; i < 10; i++){
+		div#grid-section
+			table#grid
 				tr
-					th #{letterArray[i]}
-					-for(var j = 1; j < 11; j++)
-						- var id = letterArray[i] + j;
-						td(id="#{id}") #{letterArray[i]} #{j}
-			- }
-		div#clicked
-			p
+					th
+					- for(var i = 1; i < 11; i++)
+						th #{i}
+				- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
+				- for(var i = 0; i < 10; i++){
+					tr
+						th #{letterArray[i]}
+						-for(var j = 1; j < 11; j++)
+							- var id = letterArray[i] + j;
+							td(id="#{id}" class="#{letterArray[i]} #{j}") #{letterArray[i]}#{j}
+				- }
+		div#info-section
+			div#clicked
 		script(src="http://code.jquery.com/jquery-1.11.2.min.js")
 		script(src="javascripts/app.js")
