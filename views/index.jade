@@ -10,18 +10,10 @@ html
 
 		table#grid
 			tr
-				th 
-				th 1
-				th 2
-				th 3
-				th 4
-				th 5
-				th 6
-				th 7
-				th 8
-				th 9
-				th 10
-			-var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+				th
+				- for(var i = 1; i < 11; i++)
+					th #{i}
+			- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
 			- for(var i = 0; i < 10; i++){
 				tr
