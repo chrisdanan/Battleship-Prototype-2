@@ -14,12 +14,18 @@ var main = function(){
 	var $instructions = $("<p>").addClass("instructions").text("Place pegs on the board to represent your ships");
 	var $subInstructions = $("<p>").addClass("placeShipInstructions");
 	var $hoverInfo = $("<p>").addClass("hoverInfo").text("Hovering over: ");
+	var $ul = $("<ul>");
+	var $shipListHeading = $("<p>").text("List of ships left to place on the board");
+
 	//var $numShipsLeft = $("<p>").addClass("numShipsLeft").text("Number of ships left: " + numShipPegs);
 
 	$("#clicked").append($instructions);
 	$("#clicked").append($subInstructions);
 	$("#clicked").append($hoverInfo);
 	$("#clicked").append($clickInfo);
+
+	$("#shipList").append($shipListHeading);
+	$("#shipList").append($ul);
 	//$("#clicked").append($numShipsLeft);
 
 	//console.log(ships[0].name + " has " + ships[0].numPegs + " pegs.");
@@ -34,11 +40,9 @@ var main = function(){
 	//Place ships on a list and handle click events for each ship.
 	ships.forEach(function(ship){
 		//First, create the list of ships to be outputted to the user.
-		var $ul = $("<ul>"),
-			$li = $("<li>").attr("id", ship.name).addClass("ship").text(ship.name);
+		var	$li = $("<li>").attr("id", ship.name).addClass("ship").text(ship.name);
 
 		$ul.append($li);
-		$("#shipList").append($ul);
 
 		$li.on("click", function(){
 			console.log($li.attr("id"));
