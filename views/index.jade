@@ -6,7 +6,7 @@ html
 		meta(name="author" content="Flippin' Tables")
 		link(rel="stylesheet" type="text/css" href="stylesheets/style.css")
 	body
-		h1 Hello Vane!
+		h1 Place Your Ships
 
 		table#grid
 			tr
@@ -19,7 +19,10 @@ html
 				tr
 					th #{letterArray[i]}
 					-for(var j = 1; j < 11; j++)
-						td #{letterArray[i]} #{j}
+						- var id = letterArray[i] + j;
+						td(id="#{id}") #{letterArray[i]} #{j}
 			- }
+		div#clicked
+			p
 		script(src="http://code.jquery.com/jquery-1.11.2.min.js")
 		script(src="javascripts/app.js")
