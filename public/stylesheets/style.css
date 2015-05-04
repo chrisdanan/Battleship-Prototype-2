@@ -3,6 +3,7 @@
 body{
 	font-family: arial, verdana, sans-serif;
 	font-size: 100%;
+	text-align: center;
 }
 
 td, th{
@@ -19,3 +20,18 @@ td:hover{
 	cursor: pointer;
 }
 
+#grid-section{
+	float: left;
+	position: relative;
+}
+
+#info-section{
+	float: right;
+	position: relative;
+	right: 15%;
+}
+
+#clicked{
+	text-align: center;
+	margin: 0 auto 0 auto;
+}
