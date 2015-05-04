@@ -16,7 +16,7 @@ td{
 }
 
 td:hover{
-	background-color: cornflowerblue;
+	/*background-color: cornflowerblue;*/
 	cursor: pointer;
 }
 
@@ -58,4 +58,8 @@ li.ship{
 
 li.ship:hover{
 	cursor: pointer;
+}
+
+.placementCell{
+	background-color: cornflowerblue;
 }

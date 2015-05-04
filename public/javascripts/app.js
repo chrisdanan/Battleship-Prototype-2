@@ -45,13 +45,70 @@ var main = function(){
 		$ul.append($li);
 
 		$li.on("click", function(){
-			console.log($li.attr("id"));
+
+			var $activeShip = $li.attr("id");  //Store the id of the clicked ship in a variable.
+
+			console.log("Active ship: " + $activeShip);
 
 			//Next, remove "activeShip" class from list.
 			$("#shipList li").removeClass("activeShip");
 
 			//Give clicked ship "activeShip" class.
 			$li.addClass("activeShip");
+
+			ships.forEach(function(object){
+				if(object.name === $activeShip && object.set === "unset"){
+					var numPegs = object.numPegs;
+
+					console.log("Found it in the list of ships");
+					console.log("Status: " + object.set);
+					console.log("Number of pegs: " + numPegs);
+
+					//Remove any previous rotate buttons on the list.
+					$("#rotateBtn").remove();
+
+					//Create rotate button.
+					var $rotateBtn = $("<button>").text("Rotate").attr("id", "rotateBtn");
+
+					//Append rotate button to list.
+					$li.append($rotateBtn);
+
+					//References for hover:
+					//http://api.jquery.com/hover/
+					//http://stackoverflow.com/questions/4088588/remove-class-on-mouseout-jquery
+					$("#grid td").hover(
+						function(cell){  //Handler in.
+							//Reference for finding element with id: http://stackoverflow.com/questions/638471/jquery-how-can-i-find-the-element-with-a-certain-id
+							var $cell = $("#" + cell.target.id);
+							$cell.addClass("placementCell");
+
+							for(var i = 1; i < numPegs; i++){
+								var classList = $cell.attr("class").split(" ");
+								var nextColNum = parseInt(classList[1]) + i;
+
+								console.log(typeof nextColNum);
+								var $nextCell = $("#" + classList[0] + nextColNum);
+
+								$nextCell.addClass("placementCell");
+							}
+						}, function(cell){  //Handler out.
+							//Reference for finding element with id: http://stackoverflow.com/questions/638471/jquery-how-can-i-find-the-element-with-a-certain-id
+							var $cell = $("#" + cell.target.id);
+							$cell.removeClass("placementCell");
+
+							for(var i = 1; i < numPegs; i++){
+								var classList = $cell.attr("class").split(" ");
+								var nextColNum = parseInt(classList[1]) + i;
+
+								console.log(typeof nextColNum);
+								var $nextCell = $("#" + classList[0] + nextColNum);
+
+								$nextCell.removeClass("placementCell");
+							}
+						}
+					);
+				}
+			})
 		})
 	});
 
