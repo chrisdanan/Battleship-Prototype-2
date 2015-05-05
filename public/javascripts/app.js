@@ -14,6 +14,8 @@ var main = function(){
 	//Holds the cells that have already been taken by ship pegs.
 	var closed_moves = [];
 
+	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
+
 	//DOM elements that will be placed in the information section of the html page.
 	var $clickInfo = $("<p>").addClass("clickInfo").text("You clicked: ");
 	var $instructions = $("<p>").addClass("instructions").text("Place pegs on the board to represent your ships");
@@ -22,6 +24,10 @@ var main = function(){
 
 	//Heading for the ship list.
 	var $shipListHeading = $("<p>").text("List of ships left to place on the board");
+
+	//Ready button will appear to the user when he/she has placed all of his/her ships on the grid.
+	//It will take the user to the playing field.
+	var $readyBtn = $("<button>").attr("id", "readyBtn").text("Ready!");
 
 	//+++++++++++++++++++++++++FUNCTIONS+++++++++++++++++++++++++++++++++++++++++++++
 
@@ -145,12 +151,29 @@ var main = function(){
 								object.loc.push($clickedCell);  //Push the cell id to the objects loc variable to indicate that it has a peg in that cell.
 								closed_moves.push($clickedCell);  //Push the cell id to the list of closed moves to mark that cell as taken.
 								$(cell.target).addClass("played");
+
+								//Check if all of the ship's pegs are used.
+								if(object.loc.length === numPegs){
+									//Reference for disabled: http://stackoverflow.com/questions/16777003/what-is-the-easiest-way-to-disable-enable-buttons-and-links-jquery-bootstrap
+									$shipBtn.prop("disabled", true);  //Disable button.
+									object.set = "set";  //Mark that the ship has been placed on the board.
+									shipsLeft--;
+
+									//Check if there are any ships left.
+									if(shipsLeft === 0){
+										$("#readyDiv").append($readyBtn);
+									}
+								}
 							}
 						}
 					}
 				});
 			});
 		});
+	}); //Pyramid of doom oh no...
+
+	$readyBtn.on("click", function(){
+		console.log("Clicked Ready! button.");
 	});
 
 	/*
