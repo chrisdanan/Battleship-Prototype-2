@@ -118,13 +118,12 @@ var main = function(){
 
 			//Save the id (name of ship clicked) to a variable.
 			var clickedShip = $shipBtn.attr("id");
-			
+
 			//Handle placing a ship on the grid by clicking a cell.
 			$("#grid td").click(function(cell){
 				var $clickedCell = $(cell.target).attr("id"),  //The id of the cell that was clicked (e.g. D3).
 					classList = $(cell.target).attr("class").split(" "),  //Get the class list of the cell that was clicked.
-					legal = false;  //Check to see if a placement is legal or not.
-					//element;  
+					legal = false;  //Check to see if a placement is legal or not. 
 
 				var $cellNum = classList[2];  //The cell count is always the third class item of the cell.
 
@@ -146,7 +145,6 @@ var main = function(){
 								object.loc.push($clickedCell);  //Push the cell id to the objects loc variable to indicate that it has a peg in that cell.
 								closed_moves.push($clickedCell);  //Push the cell id to the list of closed moves to mark that cell as taken.
 								$(cell.target).addClass("played");
-			////////////////////////////					//!!!!!!!!!!!!!Implement appending "played" in class name later. Uncomment 'element' variable above!
 							}
 						}
 					}

@@ -50,6 +50,13 @@ ul{
 	list-style: none;
 }
 
+button.shipBtn:hover{
+	cursor: pointer;
+	color: white;
+	font-weight: bold;
+	background-color: blue;
+}
+
 li.ship{
 	border: 1px solid black;
 	border-radius: 5px;
