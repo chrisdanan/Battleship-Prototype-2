@@ -111,11 +111,11 @@ var main = function(){
 	//Purpose: Check if the currently selected ship has any pegs left to be placed on the board.
 	var checkNoPegsLeft = function(object, numPegs, shipButton){
 		if(object.loc.length === numPegs){
-			shipButton.removeClass("activeButton");  //Remove "activeButton" class from button.
+			shipButton.removeClass("activeButton alive");  //Remove "activeButton" class from button.
 			shipButton.addClass("disabledButton");  //Add "disabledButton" class to button.
 
 			//Undisable all buttons.
-			$("#shipList button").prop("disabled", false);
+			$("#shipList .alive").prop("disabled", false);
 
 			//Reference for disabled: http://stackoverflow.com/questions/16777003/what-is-the-easiest-way-to-disable-enable-buttons-and-links-jquery-bootstrap
 			shipButton.prop("disabled", true);  //Disable active button.
@@ -159,7 +159,7 @@ var main = function(){
 	ships.forEach(function(ship){
 		//Button for each type of ship.
 		//The buttons will be used to allow the user to place ships on the grid.
-		var $shipBtn = $("<button>").attr("id", ship.name).addClass("shipBtn").text(ship.name);
+		var $shipBtn = $("<button>").attr("id", ship.name).addClass("shipBtn alive").text(ship.name);
 
 		//Append the buttons to the ship list.
 		$("#shipList").append($shipBtn);
