@@ -192,7 +192,12 @@ var main = function(){
 
 	//Ready button handler.
 	$readyBtn.on("click", function(){
+		var $data = {"ships": ships, "closed": closed_moves};
 		console.log("Clicked Ready! button.");
+		$.post("/play", $data, function(req, res) {
+			//Post is successful. Change pages.
+			console.log("Post successful");
+		});
 	});
 
 

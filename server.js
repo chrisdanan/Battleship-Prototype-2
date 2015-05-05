@@ -24,11 +24,20 @@ app.use(express.static(__dirname + "/public"));
 //CONNECT HERE TO DATABASE!!!
 
 //Tell Express to parse incoming JSON objects.
-app.use(bodyParser())
+app.use(bodyParser());
 
 //CRATE MONGOSE SKEM HERE KK?
 
 //Routes:
 app.get("/", function(req, res){
-	res.render("index", {title: "Battleship Prototype The Movie:The Game"})
+	res.render("index", {title: "Battleship Prototype The Movie:The Game"});
 });
+
+app.post("/play", function(req,res){
+	res.render("play", {title: "Let's Play"});
+});
+
+io.on("connection", function(socket){
+	console.log("A player has joined the game");
+});
+

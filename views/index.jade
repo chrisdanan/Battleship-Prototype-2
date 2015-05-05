@@ -1,34 +1,32 @@
-doctype html
-html
-	head
-		title #{title}
-		meta(charset="utf-8")
-		meta(name="author" content="Flippin' Tables")
-		link(rel="stylesheet" type="text/css" href="stylesheets/style.css")
-	body
-		h1 Place Your Ships
+extends ./layout.jade
 
-		- var k = 0;  //Used to give the unique counter to each cell.
+block title
+	title #{title}
 
-		div#grid-section
-			table#grid
+block content
+	h1 Place Your Ships
+
+	- var k = 0;  //Used to give the unique counter to each cell.
+
+	div#grid-section
+		table#grid
+			tr
+				th
+				- for(var i = 1; i < 11; i++)
+					th #{i}
+			- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
+			- for(var i = 0; i < 10; i++){
 				tr
-					th
-					- for(var i = 1; i < 11; i++)
-						th #{i}
-				- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-
-				- for(var i = 0; i < 10; i++){
-					tr
-						th #{letterArray[i]}
-						-for(var j = 1; j < 11; j++)
-							- k++;
-							- var id = letterArray[i] + j;
-							td(id="#{id}" class="#{letterArray[i]} #{j} #{k}") #{letterArray[i]}#{j}
-				- }
-		div#info-section
-			div#clicked
-			div#shipList
-			div#readyDiv
-		script(src="http://code.jquery.com/jquery-1.11.2.min.js")
-		script(src="javascripts/app.js")
+					th #{letterArray[i]}
+					-for(var j = 1; j < 11; j++)
+						- k++;
+						- var id = letterArray[i] + j;
+						td(id="#{id}" class="#{letterArray[i]} #{j} #{k}") #{letterArray[i]}#{j}
+			- }
+	div#info-section
+		div#clicked
+		div#shipList
+		div#readyDiv
+	script(src="http://code.jquery.com/jquery-1.11.2.min.js")
+	script(src="javascripts/app.js")

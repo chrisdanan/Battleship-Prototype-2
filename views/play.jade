@@ -1,0 +1,57 @@
+extends ./layout.jade
+
+block title
+	title #{title}
+
+block content
+	h1 Flippin' Boats
+	- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+	- var k = 0;
+	h2 Your Ships
+	//- var player_boat = #{boat};
+	div.container
+		div#player-grid-section
+		table#player-grid
+			tr
+				th
+				- for(var i = 1; i < 11; i++) {
+						th #{i}
+				- }
+				- for(var i = 0; i < 10; i++) {
+					tr
+						th #{letterArray[i]}
+						- for(var j = 1; j < 11; j++) {
+							- k++;
+							- var id = letterArray[i] + j;
+							td(id="#{id}", class="#{letterArray[i]}#{j}#{k}") #{letterArray[i]}#{j}
+						- }
+				- }
+
+	h2 Enemies Ships
+	div.container
+		div#enemy-grid-section
+		table#enemy-grid
+			tr
+				th
+				- for(var i = 1; i < 11; i++) {
+						th #{i}
+				- }
+				- for(var i = 0; i < 10; i++) {
+					tr
+						th #{letterArray[i]}
+						- for(var j = 1; j < 11; j++) {
+							- k++;
+							- var id = letterArray[i] + j;
+							td(id="#{id}", class="#{letterArray[i]}#{j}#{k}") #{letterArray[i]}#{j}
+						- }
+				- }
+	//- This next part should be under the two boards
+	div.container
+		div#status-board
+			//-This board shows how many ships left on each side and the last move played.
+			p#player-ship-stats Your Ships Left: 
+			p#enemy-ship-stats Enemy Ships Left: 
+			p#prev-move Last Move: 
+	script(src="/socket.io/socket.io.js")
+	script(src="http://code.jquery.com/jquery-1.11.2.min.js")
+	script(src="javascripts/game.js")
