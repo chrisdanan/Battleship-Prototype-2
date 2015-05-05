@@ -1,7 +1,7 @@
 var main = function(){
 	"use strict";
 
-	console.log("VANE!@@@@!@!@!@@!@");
+	console.log("VANE!!!!!");
 
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
@@ -140,7 +140,7 @@ var main = function(){
 	};
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	
+
 	//Append the DOM elements to their appropriate spots.
 	$("#clicked").append($instructions);
 	$("#clicked").append($subInstructions);
