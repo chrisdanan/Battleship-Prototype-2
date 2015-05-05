@@ -50,7 +50,8 @@ ul{
 	list-style: none;
 }
 
-button.shipBtn:hover{
+/*Reference: http://stackoverflow.com/questions/9207304/css-pseudo-classes-inputnotdisablednottype-submitfocus*/
+button.shipBtn:hover:not([disabled]){
 	cursor: pointer;
 	color: white;
 	font-weight: bold;
@@ -69,4 +70,8 @@ li.ship:hover{
 
 .placementCell{
 	background-color: cornflowerblue;
+}
+
+.played{
+	background-color: gray;
 }
