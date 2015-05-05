@@ -187,21 +187,38 @@ var main = function(){
 					}
 				});
 			});
-		});
-	}); //Pyramid of doom oh no...
 
-	//Ready button handler.
+			//Handle highlighting the square the cursor is over.
+			//Reference for hover: 
+			//http://stackoverflow.com/questions/4088588/remove-class-on-mouseout-jquery
+			//https://api.jquery.com/hover/
+			$("#grid td").hover(
+				function(cell){  //Handler in.
+					//Reference for checking if button is disabled: http://stackoverflow.com/questions/14913845/jquery-checking-for-disabled-attribute-and-adding-removing-it
+					//If button is not disabled, then add class "hoverPlacement".
+					if(!$shipBtn.is(":disabled")){
+						$(cell.target).addClass("hoverPlacement");
+					}
+				}, function(cell){  //Handler out.
+					//Remove class "hoverPlacement" when cursor leaves cell.
+					$(cell.target).removeClass("hoverPlacement");
+				});
+		});
+	});
+
+	//Ready button handler.  Player clicks this button once he/she is ready to move on to the next part of the game.
 	$readyBtn.on("click", function(){
 		var $data = {"ships": ships, "closed": closed_moves};
 		console.log("Clicked Ready! button.");
 		$.post("/play", $data, function(req, res) {
 			//Post is successful. Change pages.
 			console.log("Post successful");
+			console.log(ships);
 		});
 	});
 
 
-	//Handle when a table cell is clicked.
+	//Handle when a table cell is clicked and the user did not click a ship button yet (mainly used for debugging purposes - consider removing once final product is finished).
 	$("#grid td").click(function(cell){
 		var $clickedCell = $(cell.target).attr("id");  //Get the id of the cell that was clicked.
 
@@ -211,6 +228,7 @@ var main = function(){
 		$("#clicked .clickInfo").text("You clicked: " + $clickedCell);
 	});
 
+	//Handle when the player hovers cursor over a grid cell (mainly used for debugging purposes - consider removing for final product).
 	$("#grid td").mouseover(function(cell){
 		//console.log(cell.target.id);
 		$hoverInfo.text("Hovering over: " + cell.target.id);

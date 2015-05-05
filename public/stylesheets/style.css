@@ -58,6 +58,10 @@ button.shipBtn:hover:not([disabled]){
 	background-color: blue;
 }
 
+.hoverPlacement{
+	background-color: red;
+}
+
 li.ship{
 	border: 1px solid black;
 	border-radius: 5px;
