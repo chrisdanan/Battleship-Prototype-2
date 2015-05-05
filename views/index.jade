@@ -8,6 +8,8 @@ html
 	body
 		h1 Place Your Ships
 
+		- var k = 0;  //Used to give the unique counter to each cell.
+
 		div#grid-section
 			table#grid
 				tr
@@ -20,8 +22,9 @@ html
 					tr
 						th #{letterArray[i]}
 						-for(var j = 1; j < 11; j++)
+							- k++;
 							- var id = letterArray[i] + j;
-							td(id="#{id}" class="#{letterArray[i]} #{j}") #{letterArray[i]}#{j}
+							td(id="#{id}" class="#{letterArray[i]} #{j} #{k}") #{letterArray[i]}#{j}
 				- }
 		div#info-section
 			div#clicked
