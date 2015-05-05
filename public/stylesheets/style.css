@@ -58,6 +58,18 @@ button.shipBtn:hover:not([disabled]){
 	background-color: blue;
 }
 
+button.activeButton{
+	color: white;
+	font-weight: bold;
+	background-color: blue;
+}
+
+button.disabledButton{
+	color: black;
+	font-weight: bold;
+	background-color: gray;
+}
+
 .hoverPlacement{
 	background-color: red;
 }

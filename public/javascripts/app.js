@@ -111,6 +111,8 @@ var main = function(){
 	//Purpose: Check if the currently selected ship has any pegs left to be placed on the board.
 	var checkNoPegsLeft = function(object, numPegs, shipButton){
 		if(object.loc.length === numPegs){
+			shipButton.removeClass("activeButton");  //Remove "activeButton" class from button.
+			shipButton.addClass("disabledButton");  //Add "disabledButton" class to button.
 			//Reference for disabled: http://stackoverflow.com/questions/16777003/what-is-the-easiest-way-to-disable-enable-buttons-and-links-jquery-bootstrap
 			shipButton.prop("disabled", true);  //Disable button.
 			object.set = "set";  //Mark that the ship has been placed on the board.
@@ -161,6 +163,11 @@ var main = function(){
 		//Handle each button click.\\\
 		$shipBtn.on("click", function(){
 			console.log("You clicked the " + $shipBtn.attr("id") + " button.");
+
+			//Remove "activeButton" class from all buttons in the ship list.
+			$("#shipList button").removeClass("activeButton");
+			//Add "activeButton" class to the clicked button.
+			$shipBtn.addClass("activeButton");
 
 			//Save the id (name of ship clicked) to a variable.
 			var clickedShip = $shipBtn.attr("id");
