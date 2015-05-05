@@ -101,6 +101,46 @@ var main = function(){
 		return true;
 	};
 
+	//Purpose: Check if there are still any ships left to be placed on the grid.
+	var checkShipsLeft = function(){
+		if(shipsLeft === 0){
+			$("#readyDiv").append($readyBtn);
+		}
+	};
+
+	//Purpose: Check if the currently selected ship has any pegs left to be placed on the board.
+	var checkNoPegsLeft = function(object, numPegs, shipButton){
+		if(object.loc.length === numPegs){
+			//Reference for disabled: http://stackoverflow.com/questions/16777003/what-is-the-easiest-way-to-disable-enable-buttons-and-links-jquery-bootstrap
+			shipButton.prop("disabled", true);  //Disable button.
+			object.set = "set";  //Mark that the ship has been placed on the board.
+			shipsLeft--;
+		}
+
+		//Check if there are any ships left.
+		checkShipsLeft();
+	};
+
+	//Purpose: Allow player to place pegs on the grid if there are pegs left to place.
+	var checkPegsLeft = function(object, numPegs, legal, shipBtn, clickedCell, cellNum, cell){
+		//As long as there are pegs of the ship left to place on the grid, keep placing pegs.
+		if(object.loc.length < numPegs){
+			//Check if the cell clicked for placement is legal.
+			legal = verifyPlay(closed_moves, object, clickedCell, cellNum);
+
+			if(legal){
+				object.loc.push(clickedCell);  //Push the cell id to the objects loc variable to indicate that it has a peg in that cell.
+				closed_moves.push(clickedCell);  //Push the cell id to the list of closed moves to mark that cell as taken.
+				$(cell.target).addClass("played");
+
+				//Check if the currently selected ship has any pegs left to place on the board.
+				checkNoPegsLeft(object, numPegs, shipBtn);
+			}
+		}
+	};
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	
 	//Append the DOM elements to their appropriate spots.
 	$("#clicked").append($instructions);
 	$("#clicked").append($subInstructions);
@@ -118,7 +158,7 @@ var main = function(){
 		//Append the buttons to the ship list.
 		$("#shipList").append($shipBtn);
 
-		//Handle each button click.
+		//Handle each button click.\\\
 		$shipBtn.on("click", function(){
 			console.log("You clicked the " + $shipBtn.attr("id") + " button.");
 
@@ -142,140 +182,28 @@ var main = function(){
 
 						var numPegs = object.numPegs;  //Store number of pegs this ship has.
 
-						//As long as there are pegs of the ship left to place on the grid, keep placing pegs.
-						if(object.loc.length < numPegs){
-							//Check if the cell clicked for placement is legal.
-							legal = verifyPlay(closed_moves, object, $clickedCell, $cellNum);
-
-							if(legal){
-								object.loc.push($clickedCell);  //Push the cell id to the objects loc variable to indicate that it has a peg in that cell.
-								closed_moves.push($clickedCell);  //Push the cell id to the list of closed moves to mark that cell as taken.
-								$(cell.target).addClass("played");
-
-								//Check if all of the ship's pegs are used.
-								if(object.loc.length === numPegs){
-									//Reference for disabled: http://stackoverflow.com/questions/16777003/what-is-the-easiest-way-to-disable-enable-buttons-and-links-jquery-bootstrap
-									$shipBtn.prop("disabled", true);  //Disable button.
-									object.set = "set";  //Mark that the ship has been placed on the board.
-									shipsLeft--;
-
-									//Check if there are any ships left.
-									if(shipsLeft === 0){
-										$("#readyDiv").append($readyBtn);
-									}
-								}
-							}
-						}
+						//Check if the ship has more pegs to place on the grid.
+						checkPegsLeft(object, numPegs, legal, $shipBtn, $clickedCell, $cellNum, cell);
 					}
 				});
 			});
 		});
 	}); //Pyramid of doom oh no...
 
+	//Ready button handler.
 	$readyBtn.on("click", function(){
 		console.log("Clicked Ready! button.");
 	});
 
-	/*
-	ships.forEach(function(ship){
-		var numShipPegs = ship.numPegs;
-		
-		$subInstructions.text("Place " + ship.numPegs + " pegs for " + ship.name);
-	});*/
-
-	/*
-	//Place ships on a list and handle click events for each ship.
-	ships.forEach(function(ship){
-		//First, create the list of ships to be outputted to the user.
-		var	$li = $("<li>").attr("id", ship.name).addClass("ship").text(ship.name);
-
-		$ul.append($li);
-
-
-		$li.on("click", function(){
-
-			var $activeShip = $li.attr("id");  //Store the id of the clicked ship in a variable.
-
-			console.log("Active ship: " + $activeShip);
-
-			//Next, remove "activeShip" class from list.
-			$("#shipList li").removeClass("activeShip");
-
-			//Give clicked ship "activeShip" class.
-			$li.addClass("activeShip");
-
-			ships.forEach(function(object){
-				if(object.name === $activeShip && object.set === "unset"){
-					var numPegs = object.numPegs;
-
-					console.log("Found it in the list of ships");
-					console.log("Status: " + object.set);
-					console.log("Number of pegs: " + numPegs);
-
-					//Remove any previous rotate buttons on the list.
-					$("#rotateBtn").remove();
-
-					//Create rotate button.
-					var $rotateBtn = $("<button>").text("Rotate").attr("id", "rotateBtn");
-
-					//Append rotate button to list.
-					$li.append($rotateBtn);
-
-					//References for hover:
-					//http://api.jquery.com/hover/
-					//http://stackoverflow.com/questions/4088588/remove-class-on-mouseout-jquery
-					$("#grid td").hover(
-						function(cell){  //Handler in.
-							//Reference for finding element with id: http://stackoverflow.com/questions/638471/jquery-how-can-i-find-the-element-with-a-certain-id
-							var $cell = $("#" + cell.target.id);
-							$cell.addClass("placementCell");
-
-							for(var i = 1; i < numPegs; i++){
-								var classList = $cell.attr("class").split(" ");
-								var nextColNum = parseInt(classList[1]) + i;
-
-								console.log(typeof nextColNum);
-								var $nextCell = $("#" + classList[0] + nextColNum);
-
-								$nextCell.addClass("placementCell");
-							}
-						}, function(cell){  //Handler out.
-							//Reference for finding element with id: http://stackoverflow.com/questions/638471/jquery-how-can-i-find-the-element-with-a-certain-id
-							var $cell = $("#" + cell.target.id);
-							$cell.removeClass("placementCell");
-
-							for(var i = 1; i < numPegs; i++){
-								var classList = $cell.attr("class").split(" ");
-								var nextColNum = parseInt(classList[1]) + i;
-
-								console.log(typeof nextColNum);
-								var $nextCell = $("#" + classList[0] + nextColNum);
-
-								$nextCell.removeClass("placementCell");
-							}
-						}
-					);
-				}
-			})
-		})
-	});
-	*/
 
 	//Handle when a table cell is clicked.
 	$("#grid td").click(function(cell){
 		var $clickedCell = $(cell.target).attr("id");  //Get the id of the cell that was clicked.
 
-		console.log($clickedCell);
+		console.log("Clicked cell " + $clickedCell);
 
 		//Output to the user what he/she clicked.
 		$("#clicked .clickInfo").text("You clicked: " + $clickedCell);
-
-		/*
-		if(confirm("Are you sure you want to place a peg here?")){
-			$(cell.target).addClass("ship");
-			numShipPegs--;
-			$numShipsLeft.text("Number of ships left: " + numShipPegs);
-		}*/
 	});
 
 	$("#grid td").mouseover(function(cell){
