@@ -113,8 +113,12 @@ var main = function(){
 		if(object.loc.length === numPegs){
 			shipButton.removeClass("activeButton");  //Remove "activeButton" class from button.
 			shipButton.addClass("disabledButton");  //Add "disabledButton" class to button.
+
+			//Undisable all buttons.
+			$("#shipList button").prop("disabled", false);
+
 			//Reference for disabled: http://stackoverflow.com/questions/16777003/what-is-the-easiest-way-to-disable-enable-buttons-and-links-jquery-bootstrap
-			shipButton.prop("disabled", true);  //Disable button.
+			shipButton.prop("disabled", true);  //Disable active button.
 			object.set = "set";  //Mark that the ship has been placed on the board.
 			shipsLeft--;
 		}
@@ -164,6 +168,11 @@ var main = function(){
 		$shipBtn.on("click", function(){
 			console.log("You clicked the " + $shipBtn.attr("id") + " button.");
 
+			//Disable all buttons.
+			$("#shipList button").prop("disabled", true);
+			//Undisable the clicked button.
+			$shipBtn.prop("disabled", false);
+
 			//Remove "activeButton" class from all buttons in the ship list.
 			$("#shipList button").removeClass("activeButton");
 			//Add "activeButton" class to the clicked button.
@@ -171,6 +180,8 @@ var main = function(){
 
 			//Save the id (name of ship clicked) to a variable.
 			var clickedShip = $shipBtn.attr("id");
+
+			console.log("clickedShip: " + clickedShip);
 
 			//Handle placing a ship on the grid by clicking a cell.
 			$("#grid td").click(function(cell){
