@@ -48,13 +48,22 @@ app.get("/play", function(req, res){
 });
 
 //Game Rooms
+//Reference: https://github.com/Automattic/socket.io/blob/master/examples/chat/public/main.js
 var numUsers = 0;
+var usernames = {};
 io.on("connection", function(socket){
 	numUsers++;
 	console.log(numUsers + " logged in.");
 
+	socket.on("add username", function(username){
+		socket.username = username;
+		usernames[username] = username;
+		console.log(username + " has logged in.");
+	});
+
 	socket.on("disconnect", function(){
 		numUsers--;
+		delete usernames[socket.username];
 		console.log("A user logged out. " + numUsers + " logged in.")
 	});
 

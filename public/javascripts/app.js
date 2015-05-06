@@ -35,6 +35,7 @@ var main = function(username){
 
 	//Connect to the server's socket
 	var socket = io();
+	socket.emit("add username", username);
 	//+++++++++++++++++++++++++FUNCTIONS+++++++++++++++++++++++++++++++++++++++++++++
 
 	//Check if the cell clicked by the user is a valid placement cell.
@@ -302,8 +303,8 @@ var main = function(username){
 
 $(document).ready(function () {
 	username = window.prompt("Please enter your Username", "");
-	if(username === null) {
-		username = "user";
+	if(username === null || username === "") {
+		username = "User";
 	}
 	main(username);
 });
