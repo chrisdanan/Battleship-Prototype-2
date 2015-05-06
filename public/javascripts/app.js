@@ -1,7 +1,8 @@
-var main = function(){
+var main = function(username){
 	"use strict";
 
 	console.log("VANE!!!!!");
+	console.log("Hello " + username + "!!!!!!!!!!");
 
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
@@ -31,6 +32,10 @@ var main = function(){
 	//Let's Play button will appear when the user indicates that he/she is ready.
 	//It will then take the user to the playing field.
 	var $playButton = $("<button>").text("Let's play!").attr("type", "submit");
+
+	//Connect to the server's socket
+	var socket = io();
+	socket.emit("add username", username);
 	//+++++++++++++++++++++++++FUNCTIONS+++++++++++++++++++++++++++++++++++++++++++++
 
 	//Check if the cell clicked by the user is a valid placement cell.
@@ -296,4 +301,10 @@ var main = function(){
 
 };
 
-$(document).ready(main);
+$(document).ready(function () {
+	username = window.prompt("Please enter your Username", "");
+	if(username === null || username === "") {
+		username = "User";
+	}
+	main(username);
+});
