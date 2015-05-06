@@ -11,6 +11,14 @@ var express = require("express"),
 	mongoose = require("mongoose"),
 	port = 3000;
 
+//Connect to the database.
+mongoose.connect("mongodb://localhost/FlippinShips", function(err){
+	if(err){
+		console.log("CONNECTION ERROR: " + err);
+		return;
+	}
+});
+
 server.listen(port);
 console.log("Hey! Listen to port 3000!");
 
@@ -21,12 +29,17 @@ app.set("view engine", "jade");
 //Set up static directory.
 app.use(express.static(__dirname + "/public"));
 
-//CONNECT HERE TO DATABASE!!!
-
 //Tell Express to parse incoming JSON objects.
 app.use(bodyParser());
 
-//CRATE MONGOSE SKEM HERE KK?
+//Set up the schema.
+var PlayerSchema = mongoose.Schema({
+	username: String,
+	ships: Array
+});
+
+//Set up the variable to hold objects for the database.
+var PlayerModel = mongoose.model("PlayerModel", PlayerSchema);
 
 //Routes:
 //Route for homepage.
@@ -51,24 +64,41 @@ app.get("/", function(req, res){
 //Reference: https://github.com/Automattic/socket.io/blob/master/examples/chat/public/main.js
 var numUsers = 0;
 var usernames = {};
+
 io.on("connection", function(socket){
 	numUsers++;
 	console.log(numUsers + " logged in.");
 
 	socket.on("add username", function(username){
 		socket.username = username;
-		usernames[username] = username;
-		console.log(username + " has logged in.");
+		console.log(socket.username + " has logged in.");
+
+		var newUser = new PlayerModel({"username": username, "ships": []});
+
+		newUser.save(function(err){
+			if(err){
+				console.log("ERROR: " + err);
+				return;
+			}
+		});		
 	});
 
 	socket.on("save state", function(ships){
 		socket.ships = ships;
-		console.log(socket.ships);
+		//console.log(socket.ships);
+
+		PlayerModel.update({"username": socket.username}, {$set: {"ships": ships}}, function(err, results){
+			if(err){
+				console.log("ERROR: " + err);
+				return;
+			}
+
+			console.log(results);
+		});
 	});
 
 	socket.on("disconnect", function(){
 		numUsers--;
-		delete usernames[socket.username];
 		console.log(socket.username + " has logged out. " + numUsers + " logged in.")
 	});
 
