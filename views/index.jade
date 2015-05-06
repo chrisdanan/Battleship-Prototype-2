@@ -7,28 +7,57 @@ block content
 	h1 Place Your Ships
 
 	- var k = 0;  //Used to give the unique counter to each cell.
-
-	div#grid-section
+	- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+	
+	div.container.player
+		h2 Your Ships
+		div#grid-section
 		table#grid
 			tr
 				th
-				- for(var i = 1; i < 11; i++)
+				- for(var i = 1; i < 11; i++) {
 					th #{i}
-			- var letterArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+				- }
+				- for(var i = 0; i < 10; i++) {
+					tr
+						th #{letterArray[i]}
+						- for(var j = 1; j < 11; j++) {
+							- k++;
+							- var id = letterArray[i] + j;
+							td(id="#{id}", class="#{letterArray[i]} #{j} #{k} player") #{letterArray[i]}#{j}
+						- }
+				- }
 
-			- for(var i = 0; i < 10; i++){
-				tr
-					th #{letterArray[i]}
-					-for(var j = 1; j < 11; j++)
-						- k++;
-						- var id = letterArray[i] + j;
-						td(id="#{id}" class="#{letterArray[i]} #{j} #{k}") #{letterArray[i]}#{j}
-			- }
-	div#info-section
-		div#clicked
-		div#shipList
-		div#readyDiv
-			form#playForm(method="get", action="/play", name="playForm")
+	div.container.enemy
+		h2 Enemy Ships
+		div#grid-section
+		table#grid
+			tr
+				th
+				- for(var i = 1; i < 11; i++) {
+					th #{i}
+				- }
+				- for(var i = 0; i < 10; i++) {
+					tr
+						th #{letterArray[i]}
+						- for(var j = 1; j < 11; j++) {
+							- k++;
+							- var id = letterArray[i] + j;
+							td(id="#{id}", class="e #{letterArray[i]} #{j} #{k} enemy") #{letterArray[i]}#{j}
+						- }
+				- }
+	div.container
+		div#info-section
+			div#clicked
+			div#shipList
+			div#readyDiv
+				form#playForm(method="get", action="/play", name="playForm")
+	div.container
+		div#status-board
+			//-This board shows how many ships left on each side and the last move played.
+			p#player-ship-stats Your Ships Left: 
+			p#enemy-ship-stats Enemy Ships Left: 
+			p#prev-move Last Move: 
 
 block pageSpecificScripts	
 	script(src="javascripts/app.js")
