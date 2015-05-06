@@ -7,9 +7,11 @@ var main = function(username){
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
 	var ships = [
+					{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
 					{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
 					{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
-					{"name": "submarine", "numPegs": 2, "set": "unset", "loc": []}
+					{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
+					{"name": "patrol boat", "numPegs": 2, "set": "unset", "loc": []}
 				];
 
 	//Holds the cells that have already been taken by ship pegs.
@@ -53,7 +55,7 @@ var main = function(username){
 			//Checking to see if the cell previously clicked was above it. Allows down move.
 			if(clicked - 10 > 0){
 				var above = clicked - 10;
-				var cellAbove = document.getElementsByClassName(String(above))[0].id;
+				var cellAbove = document.getElementsByClassName("player " + String(above))[0].id;
 				console.log(cellAbove + " is above " + move);
 				//Now that we know what is above us, we can check if the previous cell was above it.
 				if(ship.loc.indexOf(cellAbove) >= 0) {
@@ -65,7 +67,7 @@ var main = function(username){
 			if((clicked - 1) % 10 > 0){
 				//Check to see if the cell previously clicked was left of it. Allows a right move.
 				var left = clicked - 1;
-				var cellLeft = document.getElementsByClassName(String(left))[0].id;
+				var cellLeft = document.getElementsByClassName("player " + String(left))[0].id;
 				console.log(cellLeft + " is left of " + move);
 				//Now that we know what is above us, we can check if the previous cell was above it.
 				if(ship.loc.indexOf(cellLeft) >= 0) {
@@ -78,7 +80,7 @@ var main = function(username){
 				console.log((clicked) % 10);
 				//Check to see if the cell previously clicked was below it. Allows a right move.
 				var right = clicked + 1;
-				var cellRight = document.getElementsByClassName(String(right))[0].id;
+				var cellRight = document.getElementsByClassName("player " + String(right))[0].id;
 				console.log(cellRight + " is right of " + move);
 				//Now that we know what is above us, we can check if the previous cell was above it.
 				if(ship.loc.indexOf(cellRight) >= 0) {
@@ -91,7 +93,7 @@ var main = function(username){
 			if(clicked + 10 < 101){
 				//Check to see if the cell previously clicked was below it. Allows a right move.
 				var below = clicked + 10;
-				var cellBelow = document.getElementsByClassName(String(below))[0].id;
+				var cellBelow = document.getElementsByClassName("player " + String(below))[0].id;
 				console.log(cellBelow + " is below " + move);
 				//Now that we know what is above us, we can check if the previous cell was above it.
 				if(ship.loc.indexOf(cellBelow) >= 0) {
@@ -208,7 +210,7 @@ var main = function(username){
 					$pegsParagraph.text("Pegs left: " + (numPegs - object.loc.length));
 
 					//Handle placing a ship on the grid by clicking a cell.
-					$("#grid td").click(function(cell){
+					$(".player #grid td").click(function(cell){
 						var $clickedCell = $(cell.target).attr("id"),
 							classList = $(cell.target).attr("class").split(" "),
 							legal = false;
@@ -270,13 +272,14 @@ var main = function(username){
 		var data = {"ships": ships, "closed": closed_moves};
 
 		//Send ship data to the server.
-		$.post("/saveShipLocations", data, function(res) {
-			//Post is successful.
-			console.log("Post successful");
+		// $.post("/saveShipLocations", data, function(res) {
+		// 	//Post is successful.
+		// 	console.log("Post successful");
 
-			//Append the play button to the html page.
-			$("#readyDiv form").append($playButton);
-		});
+		// 	//Append the play button to the html page.
+		// 	$("#readyDiv form").append($playButton);
+		// });
+		socket.emit("save state", ships);
 	});
 
 	$playButton.on("click", function(){
@@ -284,17 +287,17 @@ var main = function(username){
 	});
 
 	//Handle when a table cell is clicked and the user did not click a ship button yet (mainly used for debugging purposes - consider removing once final product is finished).
-	$("#grid td").click(function(cell){
+	$(".player #grid td").click(function(cell){
 		var $clickedCell = $(cell.target).attr("id");  //Get the id of the cell that was clicked.
 
 		console.log("Clicked cell " + $clickedCell);
 
 		//Output to the user what he/she clicked.
-		$("#clicked .clickInfo").text("You clicked: " + $clickedCell);
+		$(".player #clicked .clickInfo").text("You clicked: " + $clickedCell);
 	});
 
 	//Handle when the player hovers cursor over a grid cell (mainly used for debugging purposes - consider removing for final product).
-	$("#grid td").mouseover(function(cell){
+	$(".player #grid td").mouseover(function(cell){
 		//console.log(cell.target.id);
 		$hoverInfo.text("Hovering over: " + cell.target.id);
 	});
