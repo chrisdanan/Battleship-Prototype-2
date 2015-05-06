@@ -31,6 +31,9 @@ var main = function(){
 	//Let's Play button will appear when the user indicates that he/she is ready.
 	//It will then take the user to the playing field.
 	var $playButton = $("<button>").text("Let's play!").attr("type", "submit");
+
+	//Connect to the server's socket
+	var socket = io();
 	//+++++++++++++++++++++++++FUNCTIONS+++++++++++++++++++++++++++++++++++++++++++++
 
 	//Check if the cell clicked by the user is a valid placement cell.

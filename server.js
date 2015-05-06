@@ -47,7 +47,16 @@ app.get("/play", function(req, res){
 	res.render("play", {title: "Play"})
 });
 
+//Game Rooms
+var numUsers = 0;
 io.on("connection", function(socket){
-	console.log("A player has joined the game");
+	numUsers++;
+	console.log(numUsers + " logged in.");
+
+	socket.on("disconnect", function(){
+		numUsers--;
+		console.log("A user logged out. " + numUsers + " logged in.")
+	});
+
 });
 
