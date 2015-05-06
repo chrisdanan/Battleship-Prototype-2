@@ -16,6 +16,8 @@ var main = function(username){
 
 	//Holds the cells that have already been taken by ship pegs.
 	var closed_moves = [];
+	//Is it my turn?
+	var turn = null;
 
 	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
 
@@ -303,6 +305,58 @@ var main = function(username){
 	$(".player #grid td").mouseover(function(cell){
 		//console.log(cell.target.id);
 		$hoverInfo.text("Hovering over: " + cell.target.id);
+	});
+
+
+	if(turn ==== true) {
+		$(".enemy #grid td").click(function(cell){
+			var $clickedCell = $(cell.target).attr("id"); //Get the id of the clicked cell.
+
+			//DISABLE BUTTON HERE
+			//CODE...
+
+			socket.emit("attack", cell.target);
+
+			socket.emit("end turn", "");
+			turn = false;
+		});
+
+
+	} else if(turn === false) {
+		socket.on("attacked", function(attack){
+			console.log("We're under attack!");
+			var hit;
+			var index = -1;
+			var location;
+			if(closed_moves.indexOf(attack) > 0) {
+				//There is a hit
+				hit = true;
+				index = closed_moves.indexOf(attack)
+				location = closed_moves[index];
+
+				//Place peg here. Update values on Board
+
+			} else if (closed_moves.indexOf === -1){
+				//There is a miss
+				hit = false;
+				location = null;
+
+			}
+
+			socket.emit("attack result", {"hit": hit, "location": location});
+			socket.on("start turn", function(result){
+				turn = result;
+			};
+		});
+	}
+
+	socket.on("attack result", function(result){
+		if (result.hit === true) {
+			//Place peg here(O). Update status board.
+
+		} else {
+			//Place peg here(X). Update status board
+		} 
 	});
 
 };
