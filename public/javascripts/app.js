@@ -307,11 +307,14 @@ var main = function(username){
 		$hoverInfo.text("Hovering over: " + cell.target.id);
 	});
 
-	socket.on("turn", function(testMessage){
+	socket.on("first turn", function(testMessage){
 		console.log(testMessage.personFirst);
 
 		if(testMessage.personFirst === username){
 			console.log("It's your turn");
+			turn = true;
+		} else{
+			turn = false;
 		}
 	});
 };

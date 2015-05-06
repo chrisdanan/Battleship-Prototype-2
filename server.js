@@ -136,7 +136,7 @@ io.on("connection", function(socket){
 					playerToGoNext = connectedUsers[0];
 				}
 
-				io.emit("turn", {"personFirst": playerToGoFirst});
+				io.emit("first turn", {"personFirst": playerToGoFirst});
 			}
 		});
 	});
