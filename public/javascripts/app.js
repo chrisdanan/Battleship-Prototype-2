@@ -26,11 +26,11 @@ var main = function(){
 	var $shipListHeading = $("<p>").text("List of ships left to place on the board");
 	var $shipParagraph = $("<p>").text("Ship: ");
 	var $pegsParagraph = $("<p>").text("Pegs left: ");
-
 	//Ready button will appear to the user when he/she has placed all of his/her ships on the grid.
-	//It will take the user to the playing field.
 	var $readyBtn = $("<button>").attr("id", "readyBtn").text("Ready!");
-
+	//Let's Play button will appear when the user indicates that he/she is ready.
+	//It will then take the user to the playing field.
+	var $playButton = $("<button>").text("Let's play!").attr("type", "submit");
 	//+++++++++++++++++++++++++FUNCTIONS+++++++++++++++++++++++++++++++++++++++++++++
 
 	//Check if the cell clicked by the user is a valid placement cell.
@@ -106,7 +106,7 @@ var main = function(){
 	//Purpose: Check if there are still any ships left to be placed on the grid.
 	var checkShipsLeft = function(){
 		if(shipsLeft === 0){
-			$("#readyDiv").append($readyBtn);
+			$("#readyDiv").prepend($readyBtn);
 		}
 	};
 
@@ -260,15 +260,23 @@ var main = function(){
 
 	//Ready button handler.  Player clicks this button once he/she is ready to move on to the next part of the game.
 	$readyBtn.on("click", function(){
-		var $data = {"ships": ships, "closed": closed_moves};
 		console.log("Clicked Ready! button.");
-		$.post("/play", $data, function(req, res) {
-			//Post is successful. Change pages.
+
+		var data = {"ships": ships, "closed": closed_moves};
+
+		//Send ship data to the server.
+		$.post("/saveShipLocations", data, function(res) {
+			//Post is successful.
 			console.log("Post successful");
-			console.log(ships);
+
+			//Append the play button to the html page.
+			$("#readyDiv form").append($playButton);
 		});
 	});
 
+	$playButton.on("click", function(){
+		console.log("Clicked the Let's Play button");
+	});
 
 	//Handle when a table cell is clicked and the user did not click a ship button yet (mainly used for debugging purposes - consider removing once final product is finished).
 	$("#grid td").click(function(cell){

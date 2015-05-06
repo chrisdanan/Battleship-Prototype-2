@@ -29,12 +29,22 @@ app.use(bodyParser());
 //CRATE MONGOSE SKEM HERE KK?
 
 //Routes:
+//Route for homepage.
 app.get("/", function(req, res){
 	res.render("index", {title: "Battleship Prototype The Movie:The Game"});
 });
 
-app.post("/play", function(req,res){
-	res.render("play", {title: "Let's Play"});
+//Route for saving the ship locations.
+app.post("/saveShipLocations", function(req,res){
+	console.log("RECEIVED POST");
+	console.log(req.body);
+
+	res.send("");  //Send junk data.
+});
+
+//Route for loading the playing field.
+app.get("/play", function(req, res){
+	res.render("play", {title: "Play"})
 });
 
 io.on("connection", function(socket){
