@@ -1,7 +1,8 @@
-var main = function(){
+var main = function(username){
 	"use strict";
 
 	console.log("VANE!!!!!");
+	console.log("Hello " + username + "!!!!!!!!!!");
 
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
@@ -299,4 +300,10 @@ var main = function(){
 
 };
 
-$(document).ready(main);
+$(document).ready(function () {
+	username = window.prompt("Please enter your Username", "");
+	if(username === null) {
+		username = "user";
+	}
+	main(username);
+});
