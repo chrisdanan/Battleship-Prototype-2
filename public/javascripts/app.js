@@ -33,7 +33,7 @@ var main = function(username){
 	var $readyBtn = $("<button>").attr("id", "readyBtn").text("Ready!");
 	//Let's Play button will appear when the user indicates that he/she is ready.
 	//It will then take the user to the playing field.
-	var $playButton = $("<button>").text("Let's play!").attr("type", "submit");
+	var $playButton = $("<button>").text("Let's play!").attr("id", "playButton");
 
 	//Connect to the server's socket
 	var socket = io();
@@ -269,21 +269,24 @@ var main = function(username){
 	$readyBtn.on("click", function(){
 		console.log("Clicked Ready! button.");
 
-		var data = {"ships": ships, "closed": closed_moves};
+		var data = {"ships": ships, "closed_moves": closed_moves};
 
 		//Send ship data to the server.
 		// $.post("/saveShipLocations", data, function(res) {
 		// 	//Post is successful.
 		// 	console.log("Post successful");
 
-		// 	//Append the play button to the html page.
-		// 	$("#readyDiv form").append($playButton);
-		// });
-		socket.emit("save state", ships);
+		//Append the play button to the html page.
+		$("#readyDiv").append($playButton);
+		//});
+		socket.emit("save state", data);
 	});
 
 	$playButton.on("click", function(){
 		console.log("Clicked the Let's Play button");
+
+		socket.emit("play game", {"readyFlag": "1"});
+
 	});
 
 	//Handle when a table cell is clicked and the user did not click a ship button yet (mainly used for debugging purposes - consider removing once final product is finished).
