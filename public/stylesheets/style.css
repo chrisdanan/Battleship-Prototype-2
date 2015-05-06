@@ -37,7 +37,9 @@ td:hover{
 }
 
 #shipList{
+	border: 1px solid black;
 	text-align: center;
+	padding: 10px;
 }
 
 .activeShip{
@@ -92,6 +94,10 @@ li.ship:hover{
 
 .placementCell{
 	background-color: cornflowerblue;
+}
+
+.instructions{
+	font-weight: bold;
 }
 
 .played{

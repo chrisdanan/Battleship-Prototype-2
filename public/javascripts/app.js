@@ -22,8 +22,10 @@ var main = function(){
 	var $subInstructions = $("<p>").addClass("placeShipInstructions");
 	var $hoverInfo = $("<p>").addClass("hoverInfo").text("Hovering over: ");
 
-	//Heading for the ship list.
+	//DOM elements that will be placed in the ship list section.
 	var $shipListHeading = $("<p>").text("List of ships left to place on the board");
+	var $shipParagraph = $("<p>").text("Ship: ");
+	var $pegsParagraph = $("<p>").text("Pegs left: ");
 
 	//Ready button will appear to the user when he/she has placed all of his/her ships on the grid.
 	//It will take the user to the playing field.
@@ -139,6 +141,10 @@ var main = function(){
 				closed_moves.push(clickedCell);  //Push the cell id to the list of closed moves to mark that cell as taken.
 				$(cell.target).addClass("played");
 
+				//Update pegsParagraph.
+				$pegsParagraph.text("Pegs left: " + (numPegs - object.loc.length));
+
+
 				//Check if the currently selected ship has any pegs left to place on the board.
 				checkNoPegsLeft(object, numPegs, shipBtn);
 			}
@@ -154,6 +160,8 @@ var main = function(){
 	$("#clicked").append($clickInfo);
 
 	$("#shipList").append($shipListHeading);
+	$("#shipList").append($shipParagraph);
+	$("#shipList").append($pegsParagraph);
 
 	//Go through each ship and handle them (place them on the board).
 	ships.forEach(function(ship){
@@ -166,7 +174,12 @@ var main = function(){
 
 		//Handle each button click.\\\
 		$shipBtn.on("click", function(){
-			console.log("You clicked the " + $shipBtn.attr("id") + " button.");
+			//Save the id (name of ship clicked) to a variable.
+			var clickedShip = $shipBtn.attr("id");
+			console.log("clickedShip: " + clickedShip);
+
+			//Output what ship the player chose:
+			$shipParagraph.text("Ship: " + clickedShip);
 
 			//Disable all buttons.
 			$("#shipList button").prop("disabled", true);
@@ -178,11 +191,32 @@ var main = function(){
 			//Add "activeButton" class to the clicked button.
 			$shipBtn.addClass("activeButton");
 
-			//Save the id (name of ship clicked) to a variable.
-			var clickedShip = $shipBtn.attr("id");
+			ships.forEach(function(object){
+				//Find the correct ship amongst the list of ships.
+				if(clickedShip === object.name && object.set === "unset"){
+					console.log("Found the ship in the list:");
+					console.log(object);
 
-			console.log("clickedShip: " + clickedShip);
+					var numPegs = object.numPegs;  //Store the number of pegs this ship has.
 
+					//Output how many pegs the ship has left to be placed on the grid.
+					$pegsParagraph.text("Pegs left: " + (numPegs - object.loc.length));
+
+					//Handle placing a ship on the grid by clicking a cell.
+					$("#grid td").click(function(cell){
+						var $clickedCell = $(cell.target).attr("id"),
+							classList = $(cell.target).attr("class").split(" "),
+							legal = false;
+
+						var $cellNum = classList[2];
+
+						//Check if the ship has more pegs to place on the grid.
+						checkPegsLeft(object, numPegs, legal, $shipBtn, $clickedCell, $cellNum, cell);
+					});
+				}
+			});
+
+			/*
 			//Handle placing a ship on the grid by clicking a cell.
 			$("#grid td").click(function(cell){
 				var $clickedCell = $(cell.target).attr("id"),  //The id of the cell that was clicked (e.g. D3).
@@ -204,7 +238,7 @@ var main = function(){
 						checkPegsLeft(object, numPegs, legal, $shipBtn, $clickedCell, $cellNum, cell);
 					}
 				});
-			});
+			});*/
 
 			//Handle highlighting the square the cursor is over.
 			//Reference for hover: 
