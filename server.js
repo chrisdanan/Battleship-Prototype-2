@@ -11,6 +11,8 @@ var express = require("express"),
 	mongoose = require("mongoose"),
 	port = 3000;
 
+var connectedUsers = [];
+
 //Connect to the database.
 mongoose.connect("mongodb://localhost/FlippinShips", function(err){
 	if(err){
@@ -35,7 +37,8 @@ app.use(bodyParser());
 //Set up the schema.
 var PlayerSchema = mongoose.Schema({
 	username: String,
-	ships: Array
+	ships: Array,
+	closed_moves: Array
 });
 
 //Set up the variable to hold objects for the database.
@@ -83,17 +86,31 @@ io.on("connection", function(socket){
 		});		
 	});
 
-	socket.on("save state", function(ships){
-		socket.ships = ships;
+	socket.on("save state", function(data){
+
+		socket.ships = data.ships;
+		socket.closed_moves = data.closed_moves;
+
 		//console.log(socket.ships);
 
-		PlayerModel.update({"username": socket.username}, {$set: {"ships": ships}}, function(err, results){
+		console.log(data);
+
+		PlayerModel.update({"username": socket.username}, {$set: {"ships": data.ships, "closed_moves": data.closed_moves}}, function(err, results){
 			if(err){
 				console.log("ERROR: " + err);
 				return;
 			}
 
 			console.log(results);
+		});
+	});
+
+	socket.on("play game", function(readyFlag){
+		PlayerModel.find({"username": socket.username}, function(err, data){
+			if(err){
+				console.log("ERROR: " + err);
+				return;
+			}
 		});
 	});
 
