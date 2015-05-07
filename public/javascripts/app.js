@@ -17,6 +17,8 @@ var main = function(username){
 	//Holds the cells that have already been taken by ship pegs.
 	var closed_moves = [];
 
+	var turn = null;
+
 	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
 
 	//DOM elements that will be placed in the information section of the html page.
@@ -305,6 +307,16 @@ var main = function(username){
 		$hoverInfo.text("Hovering over: " + cell.target.id);
 	});
 
+	socket.on("first turn", function(testMessage){
+		console.log(testMessage.personFirst);
+
+		if(testMessage.personFirst === username){
+			console.log("It's your turn");
+			turn = true;
+		} else{
+			turn = false;
+		}
+	});
 };
 
 $(document).ready(function () {

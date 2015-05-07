@@ -44,6 +44,10 @@ var PlayerSchema = mongoose.Schema({
 //Set up the variable to hold objects for the database.
 var PlayerModel = mongoose.model("PlayerModel", PlayerSchema);
 
+var initializeTurn = function(){
+	return Math.floor(Math.random() * 2 + 1) -1;
+};
+
 //Routes:
 //Route for homepage.
 app.get("/", function(req, res){
@@ -115,6 +119,25 @@ io.on("connection", function(socket){
 			connectedUsers.push(data[0].username);
 
 			console.log(connectedUsers);
+
+			if(connectedUsers.length === 2){
+				console.log("Ready to start the game");
+
+				var turn = initializeTurn();
+
+				var playerToGoFirst,
+					playerToGoNext;
+
+				if(turn === 0){
+					playerToGoFirst = connectedUsers[turn];
+					playerToGoNext = connectedUsers[1];
+				} else{
+					playerToGoFirst = connectedUsers[turn];
+					playerToGoNext = connectedUsers[0];
+				}
+
+				io.emit("first turn", {"personFirst": playerToGoFirst});
+			}
 		});
 	});
 
