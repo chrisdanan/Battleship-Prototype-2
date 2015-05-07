@@ -19,6 +19,8 @@ var main = function(username){
 	//Is it my turn?
 	var turn = null;
 
+	var turn = null;
+
 	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
 
 	//DOM elements that will be placed in the information section of the html page.
@@ -307,6 +309,7 @@ var main = function(username){
 		$hoverInfo.text("Hovering over: " + cell.target.id);
 	});
 
+<<<<<<< HEAD
 
 	if(turn ==== true) {
 		$(".enemy #grid td").click(function(cell){
@@ -359,6 +362,18 @@ var main = function(username){
 		} 
 	});
 
+=======
+	socket.on("first turn", function(testMessage){
+		console.log(testMessage.personFirst);
+
+		if(testMessage.personFirst === username){
+			console.log("It's your turn");
+			turn = true;
+		} else{
+			turn = false;
+		}
+	});
+>>>>>>> 840d528f30a09fd9631cc95acfd4fa64ebcc2ea3
 };
 
 $(document).ready(function () {
