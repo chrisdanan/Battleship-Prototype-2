@@ -114,7 +114,7 @@ io.on("connection", function(socket){
 		socket.broadcast.emit("attacked", attack);
 	});
 
-	socket.on("attack result" function(result){
+	socket.on("attack result", function(result){
 		//Reports whether user got hit or missed
 		socket.broadcast.emit("attack result");
 	});

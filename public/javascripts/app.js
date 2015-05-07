@@ -19,8 +19,6 @@ var main = function(username){
 	//Is it my turn?
 	var turn = null;
 
-	var turn = null;
-
 	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
 
 	//DOM elements that will be placed in the information section of the html page.
@@ -309,9 +307,7 @@ var main = function(username){
 		$hoverInfo.text("Hovering over: " + cell.target.id);
 	});
 
-<<<<<<< HEAD
-
-	if(turn ==== true) {
+	if(turn === true) {
 		$(".enemy #grid td").click(function(cell){
 			var $clickedCell = $(cell.target).attr("id"); //Get the id of the clicked cell.
 
@@ -349,7 +345,7 @@ var main = function(username){
 			socket.emit("attack result", {"hit": hit, "location": location});
 			socket.on("start turn", function(result){
 				turn = result;
-			};
+			});
 		});
 	}
 
@@ -362,7 +358,6 @@ var main = function(username){
 		} 
 	});
 
-=======
 	socket.on("first turn", function(testMessage){
 		console.log(testMessage.personFirst);
 
@@ -373,7 +368,6 @@ var main = function(username){
 			turn = false;
 		}
 	});
->>>>>>> 840d528f30a09fd9631cc95acfd4fa64ebcc2ea3
 };
 
 $(document).ready(function () {
