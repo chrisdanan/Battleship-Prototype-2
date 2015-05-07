@@ -7,10 +7,10 @@ var main = function(username){
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
 	var ships = [
-					//{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
-					//{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
-					//{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
-					//{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
+					{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
+					{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
+					{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
+					{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
 					{"name": "patrol boat", "numPegs": 2, "set": "unset", "loc": []}
 				];
 
