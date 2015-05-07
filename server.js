@@ -117,7 +117,7 @@ io.on("connection", function(socket){
 
 	socket.on("attack result", function(result){
 		//Reports whether user got hit or missed
-		socket.broadcast.emit("attack result");
+		socket.broadcast.emit("attack result", result);
 	});
 
 	socket.on("play game", function(readyFlag){

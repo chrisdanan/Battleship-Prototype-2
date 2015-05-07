@@ -7,10 +7,10 @@ var main = function(username){
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
 	var ships = [
-					{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
-					{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
-					{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
-					{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
+					//{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
+					//{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
+					//{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
+					//{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
 					{"name": "patrol boat", "numPegs": 2, "set": "unset", "loc": []}
 				];
 
@@ -284,11 +284,14 @@ var main = function(username){
 	});
 
 	//If it is your turn, then you are able to click the enemy grid to make an attack.
-	if(turn === true) {
-		//Listen to player clicking enemy grid cell.
-		$(".enemy #grid td").click(function(cell){
-			var $clickedCell = $(cell.target).attr("id"); //Get the id of the clicked cell.
+	//Listen to player clicking enemy grid cell.
+	$(".enemy #grid td").click(function(cell){
 
+		var $clickedCell = $(cell.target).attr("id"); //Get the id of the clicked cell.
+
+		console.log($clickedCell);
+
+		if(turn === true){
 			//DISABLE BUTTON HERE
 			//CODE...
 
@@ -296,48 +299,85 @@ var main = function(username){
 
 			socket.emit("end turn", "");
 			turn = false;
-		});
+		} else if(turn === false){
+			socket.on("attacked", function(attack){
+				console.log("We're under attack!");
+				console.log("They are attacking " +  attack);
+
+				var hit;  //Boolean for hit or not hit.
+				var index = -1;  //If attack is hit, then it has index in closed_moves; else, index is less than 0.
+				var location;  //Location of hit.
+
+				//If attack is in closed_moves array.
+				if(closed_moves.indexOf(attack) > 0) {
+					//There is a hit
+					hit = true;
+					index = closed_moves.indexOf(attack)
+					location = closed_moves[index];
+
+					//Place peg here. Update values on Board
+
+				} else if (closed_moves.indexOf === -1){
+					//There is a miss
+					hit = false;
+					location = null;
+
+				}
+
+				socket.emit("attack result", {"hit": hit, "location": location});
+				socket.on("start turn", function(result){
+					turn = result;
+				});
+			});
+		}
+	});
+
 
 	//If it is not your turn, then you are not able to click the enemy grid.
-	} else if(turn === false) {
-		socket.on("attacked", function(attack){
-			console.log("We're under attack!");
-			console.log("They are attacking + " attack);
+	socket.on("attacked", function(attack){
+		console.log("We're under attack!");
+		console.log("They are attacking " +  attack);
 
-			var hit;  //Boolean for hit or not hit.
-			var index = -1;  //If attack is hit, then it has index in closed_moves; else, index is less than 0.
-			var location;  //Location of hit.
+		var hit;  //Boolean for hit or not hit.
+		var index = -1;  //If attack is hit, then it has index in closed_moves; else, index is less than 0.
+		var location;  //Location of hit.
 
-			//If attack is in closed_moves array.
-			if(closed_moves.indexOf(attack) > 0) {
-				//There is a hit
-				hit = true;
-				index = closed_moves.indexOf(attack)
-				location = closed_moves[index];
+		//If attack is in closed_moves array.
+		if(closed_moves.indexOf(attack) >= 0) {
+			//There is a hit
+			hit = true;
+			index = closed_moves.indexOf(attack)
+			location = closed_moves[index];
 
-				//Place peg here. Update values on Board
+			//Place peg here. Update values on Board
 
-			} else if (closed_moves.indexOf === -1){
-				//There is a miss
-				hit = false;
-				location = null;
+		} else if (closed_moves.indexOf === -1){
+			//There is a miss
+			hit = false;
+			location = null;
 
-			}
+		}
 
-			socket.emit("attack result", {"hit": hit, "location": location});
-			socket.on("start turn", function(result){
-				turn = result;
-			});
+		socket.emit("attack result", {"hit": hit, "location": location});
+		socket.on("start turn", function(result){
+			turn = result;
 		});
-	}
+	});
 
 	//If your attack hit.
 	socket.on("attack result", function(result){
 		if (result.hit === true) {
 			//Place peg here(O). Update status board.
 
+			//$hitCell = $("#" + result);
+			//$hitCell.text("X");
+			console.log("Hit: " + result);
+
 		} else {
 			//Place peg here(X). Update status board
+			console.log("No hit: " + result);
+			//$hitCell = $("#" + result);
+			//$hitCell.text("O");
 		} 
 	});
 
