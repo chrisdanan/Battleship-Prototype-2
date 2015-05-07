@@ -225,30 +225,6 @@ var main = function(username){
 				}
 			});
 
-			/*
-			//Handle placing a ship on the grid by clicking a cell.
-			$("#grid td").click(function(cell){
-				var $clickedCell = $(cell.target).attr("id"),  //The id of the cell that was clicked (e.g. D3).
-					classList = $(cell.target).attr("class").split(" "),  //Get the class list of the cell that was clicked.
-					legal = false;  //Check to see if a placement is legal or not. 
-
-				var $cellNum = classList[2];  //The cell count is always the third class item of the cell.
-
-				//Match button click to a ship in the list of ships to get information about the ship (e.g. number of pegs).
-				ships.forEach(function(object){
-					//Find the correct ship amongst the list of ships.
-					if(clickedShip === object.name && object.set === "unset"){
-						console.log("Found the ship in the list");
-						console.log(object);
-
-						var numPegs = object.numPegs;  //Store number of pegs this ship has.
-
-						//Check if the ship has more pegs to place on the grid.
-						checkPegsLeft(object, numPegs, legal, $shipBtn, $clickedCell, $cellNum, cell);
-					}
-				});
-			});*/
-
 			//Handle highlighting the square the cursor is over.
 			//Reference for hover: 
 			//http://stackoverflow.com/questions/4088588/remove-class-on-mouseout-jquery
@@ -307,26 +283,32 @@ var main = function(username){
 		$hoverInfo.text("Hovering over: " + cell.target.id);
 	});
 
+	//If it is your turn, then you are able to click the enemy grid to make an attack.
 	if(turn === true) {
+		//Listen to player clicking enemy grid cell.
 		$(".enemy #grid td").click(function(cell){
 			var $clickedCell = $(cell.target).attr("id"); //Get the id of the clicked cell.
 
 			//DISABLE BUTTON HERE
 			//CODE...
 
-			socket.emit("attack", cell.target);
+			socket.emit("attack", $clickedCell);
 
 			socket.emit("end turn", "");
 			turn = false;
 		});
 
-
+	//If it is not your turn, then you are not able to click the enemy grid.
 	} else if(turn === false) {
 		socket.on("attacked", function(attack){
 			console.log("We're under attack!");
-			var hit;
-			var index = -1;
-			var location;
+			console.log("They are attacking + " attack);
+
+			var hit;  //Boolean for hit or not hit.
+			var index = -1;  //If attack is hit, then it has index in closed_moves; else, index is less than 0.
+			var location;  //Location of hit.
+
+			//If attack is in closed_moves array.
 			if(closed_moves.indexOf(attack) > 0) {
 				//There is a hit
 				hit = true;
@@ -349,6 +331,7 @@ var main = function(username){
 		});
 	}
 
+	//If your attack hit.
 	socket.on("attack result", function(result){
 		if (result.hit === true) {
 			//Place peg here(O). Update status board.
@@ -358,13 +341,16 @@ var main = function(username){
 		} 
 	});
 
+	//Listen: who goes first?
 	socket.on("first turn", function(testMessage){
 		console.log(testMessage.personFirst);
 
+		//testMessage holds name of person who will go first, which is determined by the server.
 		if(testMessage.personFirst === username){
 			console.log("It's your turn");
 			turn = true;
 		} else{
+			console.log("It's not your turn");
 			turn = false;
 		}
 	});
