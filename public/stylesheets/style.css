@@ -1,21 +1,44 @@
 /*Stylesheet for index.jade*/
 
 body{
-	font-family: arial, verdana, sans-serif;
-	font-size: 100%;
+	font-family: sans-serif, verdana, 'Open Sans', arial;
+	background-color: #315481;
+	background-image: linear-gradient(to bottom, #315481, #918e82 100%);
+	background-attachment: fixed;
 	text-align: center;
+	font-size: 100%;
 }
 
-td, th{
+#content {
+	float: center;
+	margin: auto;
+}
+
+#player, #enemy {
+	width: 600px;
+}
+
+#stat, #info {
+	padding-top: 10px;
+}
+
+#grid th {
+	color: #bab1ba;
+}
+
+#grid td, th{
 	margin: 5px;
 	padding: 8px;
 }
 
-td{
+#grid td{
 	border: 1px solid black;
+	height:30px;
+	width:30px;
+	border-radius:15px;
 }
 
-td:hover{
+#grid td:hover{
 	/*background-color: cornflowerblue;*/
 	cursor: pointer;
 }
@@ -36,16 +59,15 @@ td:hover{
 	margin: 0 auto 0 auto;
 }
 
-#shipList{
-	border: 1px solid black;
-	text-align: center;
-	padding: 10px;
-}
-
 .activeShip{
 	color: white;
 	font-weight: bold;
 	background-color: blue;
+}
+
+#status-board{
+	font-size: 1.2em;
+	color: #bab1ba;
 }
 
 ul{
