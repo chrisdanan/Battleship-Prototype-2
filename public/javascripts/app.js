@@ -1,7 +1,11 @@
-var main = function(username){
+// Client-side code
+/* jshint browser: true, jquery: true, curly: true, eqeqeq: true, forin: true, immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: double, strict: true, undef: true, unused: true */
+
+
+var main = function(username, turn){
 	"use strict";
 
-	console.log("VANE!!!!!");
+	console.log("VANE!!!!!" + turn);
 	console.log("Hello " + username + "!!!!!!!!!!");
 
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
@@ -17,7 +21,7 @@ var main = function(username){
 	//Holds the cells that have already been taken by ship pegs.
 	var closed_moves = [];
 	//Is it my turn?
-	var turn = null;
+	//var turn = null;
 
 	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
 
@@ -78,7 +82,7 @@ var main = function(username){
 				}
 			}
 			//Check to see if the cell previously clicked was to its right. Allows a left move.
-			if((clicked) % 10 != 0){
+			if((clicked) % 10 !== 0){
 				console.log((clicked) % 10);
 				//Check to see if the cell previously clicked was below it. Allows a right move.
 				var right = clicked + 1;
@@ -264,18 +268,22 @@ var main = function(username){
 		console.log("Clicked the Let's Play button");
 
 		socket.emit("play game", {"readyFlag": "1"});
-		$("td#info").remove();
+		//$("td#info").remove();
 		$("td#stat").show();
+		$readyBtn.hide();
+		$playButton.hide();
 	});
 
 	//Handle when a table cell is clicked and the user did not click a ship button yet (mainly used for debugging purposes - consider removing once final product is finished).
 	$(".player #grid td").click(function(cell){
-		var $clickedCell = $(cell.target).attr("id");  //Get the id of the cell that was clicked.
+		if(turn === null) {
+			var $clickedCell = $(cell.target).attr("id");  //Get the id of the cell that was clicked.
 
-		console.log("Clicked cell " + $clickedCell);
+			console.log("Clicked player cell " + $clickedCell + ", Turn: " + turn);
 
-		//Output to the user what he/she clicked.
-		$(".player #clicked .clickInfo").text("You clicked: " + $clickedCell);
+			//Output to the user what he/she clicked.
+			$(".player #clicked .clickInfo").text("You clicked: " + $clickedCell);
+		}
 	});
 
 	//Handle when the player hovers cursor over a grid cell (mainly used for debugging purposes - consider removing for final product).
@@ -286,54 +294,19 @@ var main = function(username){
 
 	//If it is your turn, then you are able to click the enemy grid to make an attack.
 	//Listen to player clicking enemy grid cell.
-	if(turn === true){
-		$(".enemy #grid td").click(function(cell){
-
+	$("td#enemy #grid td").click(function(cell){
+		if(turn === true){
 			var $clickedCell = $(cell.target).attr("id"); //Get the id of the clicked cell.
 
-			console.log($clickedCell);
-
-
-			//DISABLE BUTTON HERE
-			//CODE...
+			console.log("Clicked enemy cell: " + $clickedCell);
 
 			socket.emit("attack", $clickedCell);
 
 			socket.emit("end turn", "");
+			console.log("ターンエンド。");
 			turn = false;
-		}); 
-	} else if(turn === false){
-		socket.on("attacked", function(attack){
-			console.log("We're under attack!");
-			console.log("They are attacking " +  attack);
-
-			var hit;  //Boolean for hit or not hit.
-			var index = -1;  //If attack is hit, then it has index in closed_moves; else, index is less than 0.
-			var location;  //Location of hit.
-
-			//If attack is in closed_moves array.
-			if(closed_moves.indexOf(attack) > 0) {
-				//There is a hit
-				hit = true;
-				index = closed_moves.indexOf(attack)
-				location = closed_moves[index];
-
-				//Place peg here. Update values on Board
-
-			} else if (closed_moves.indexOf === -1){
-				//There is a miss
-				hit = false;
-				location = null;
-
-			}
-
-			socket.emit("attack result", {"hit": hit, "location": location});
-			socket.on("start turn", function(result){
-				turn = result;
-			});
-		});
-	}
-
+		}
+	}); 
 
 	//If it is not your turn, then you are not able to click the enemy grid.
 	socket.on("attacked", function(attack){
@@ -348,19 +321,19 @@ var main = function(username){
 		if(closed_moves.indexOf(attack) >= 0) {
 			//There is a hit
 			hit = true;
-			index = closed_moves.indexOf(attack)
+			index = closed_moves.indexOf(attack);
 			location = closed_moves[index];
 
 			//Place peg here. Update values on Board
 
-		} else if (closed_moves.indexOf === -1){
+		} else if (closed_moves.indexOf(attack) === -1){
 			//There is a miss
 			hit = false;
-			location = null;
+			location = attack;
 
 		}
 
-		socket.emit("attack result", {"hit": hit, "location": location});
+		socket.emit("attack result", {"hit": hit, "loc": location});
 		socket.on("start turn", function(result){
 			turn = result;
 		});
@@ -368,18 +341,31 @@ var main = function(username){
 
 	//If your attack hit.
 	socket.on("attack result", function(result){
+		var a,
+			b,
+			$hitCell,
+			className;
+
+		//Split up the ID to get a working class name;
+		a = result.loc.charAt(0);
+		b = result.loc.substring(1);
+		className = a + " " + b + " enemy";
+		$hitCell = document.getElementsByClassName(className);
+
+		//Update board.
 		if (result.hit === true) {
 			//Place peg here(O). Update status board.
-
-			//$hitCell = $("#" + result);
-			//$hitCell.text("X");
-			console.log("Hit: " + result);
+			console.log("Hit: " + result.loc);
+			console.log($hitCell);
+			$hitCell[0].textContent = "O";
+			$hitCell[0].className += " hit";
 
 		} else {
 			//Place peg here(X). Update status board
-			console.log("No hit: " + result);
-			//$hitCell = $("#" + result);
-			//$hitCell.text("O");
+			console.log("No hit: " + result.loc);
+			console.log($hitCell);
+			$hitCell[0].textContent = "X";
+			$hitCell[0].className += " miss";
 		} 
 	});
 
@@ -399,9 +385,12 @@ var main = function(username){
 };
 
 $(document).ready(function () {
-	username = window.prompt("Please enter your Username", "");
+  	"use strict";
+  	//Is it my turn; Set it outside, where the variable can't be changed.
+	var turn = null;
+	var username = window.prompt("Please enter your Username", "");
 	if(username === null || username === "") {
 		username = "User";
 	}
-	main(username);
+	main(username, turn);
 });

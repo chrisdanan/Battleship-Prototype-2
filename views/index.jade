@@ -31,6 +31,7 @@ block content
 										- }
 								- }
 			td#enemy
+				-k = 0;
 				div.container.enemy
 					h2 Enemy Ships
 					div#grid-section
@@ -46,7 +47,7 @@ block content
 									- for(var j = 1; j < 11; j++) {
 										- k++;
 										- var id = letterArray[i] + j;
-										td(id="#{id}", class="e #{letterArray[i]} #{j} #{k} enemy") #{letterArray[i]}#{j}
+										td(id="#{id}", class="#{letterArray[i]} #{j} #{k} enemy") #{letterArray[i]}#{j}
 									- }
 							- }
 		tr

@@ -129,3 +129,11 @@ li.ship:hover{
 .played{
 	background-color: darkgray;
 }
+
+.hit{
+	background-color: blue;
+}
+
+.miss{
+	background-color: red;
+}
