@@ -70,6 +70,10 @@ body{
 	color: #bab1ba;
 }
 
+#stat{
+	display: none;
+}
+
 ul{
 	list-style: none;
 }

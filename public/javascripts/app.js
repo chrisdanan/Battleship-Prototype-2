@@ -8,10 +8,10 @@ var main = function(username){
 	//List of ships allowed in the game.
 	var ships = [
 					{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
-					{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
-					{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
-					{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
-					{"name": "patrol boat", "numPegs": 2, "set": "unset", "loc": []}
+					//{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
+					//{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
+					//{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
+					//sx{"name": "patrol boat", "numPegs": 2, "set": "unset", "loc": []}
 				];
 
 	//Holds the cells that have already been taken by ship pegs.
@@ -257,6 +257,8 @@ var main = function(username){
 		//Append the play button to the html page.
 		$("#readyDiv").append($playButton);
 		//});
+		$("td#info").remove();
+		$("td#stat").show();
 		socket.emit("save state", data);
 	});
 

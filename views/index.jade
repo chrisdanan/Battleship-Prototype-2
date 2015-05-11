@@ -50,13 +50,6 @@ block content
 									- }
 							- }
 		tr
-			td#stat
-				div.container
-					div#status-board
-						//-This board shows how many ships left on each side and the last move played.
-						p#player-ship-stats Your Ships Left: 
-						p#enemy-ship-stats Enemy Ships Left: 
-						p#prev-move Last Move: 
 			td#info
 				div.container
 					div#info-section
@@ -64,6 +57,15 @@ block content
 						div#shipList
 						div#readyDiv
 							<!--form#playForm(method="get", action="/play", name="playForm")-->
+			td#stat
+				div.container
+					div#status-board
+						//-This board shows how many ships left on each side and the last move played.
+						p#player-ship-stats Your Ships Left: 
+						p#enemy-ship-stats Enemy Ships Left: 
+						p#prev-move Last Move: 
+
+			
 
 block pageSpecificScripts	
 	script(src="javascripts/app.js")
