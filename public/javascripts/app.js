@@ -23,7 +23,8 @@ var main = function(username, turn){
 	//Is it my turn?
 	//var turn = null;
 
-	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
+	var shipsLeft = ships.length;  //Used to keep track of how many ships the player has left to place on the board during the ship placement stage of the game.
+	var playerLife = ships.length;  //Used to keep track of how many ships the player has left on the board during gameplay.
 
 	//DOM elements that will be placed in the information section of the html page.
 	var $clickInfo = $("<p>").addClass("clickInfo").text("You clicked: ");
@@ -366,7 +367,9 @@ var main = function(username, turn){
 							killer: true
 						});	
 
-						destroyed = ship.name;
+						destroyed = ship.name;  //Update destroyed variable.
+						playerLife = playerLife - 1;
+
 					}
 				}
 			});
@@ -386,10 +389,7 @@ var main = function(username, turn){
 
 		}
 
-		socket.emit("attack result", {"hit": hit, "loc": location, "destroyed": destroyed});
-		socket.on("start turn", function(result){
-			turn = result;
-		});
+		socket.emit("attack result", {"hit": hit, "loc": location, "destroyed": destroyed, "playerLife": playerLife});
 	});
 
 	//If your attack hit.
@@ -406,7 +406,7 @@ var main = function(username, turn){
 		$hitCell = document.getElementsByClassName(className);
 
 		//Update board.
-		if (result.hit === true) {
+		if (result.hit === true) { //Hit.
 			//Place peg here(X). Update status board.
 			console.log("Hit: " + result.loc);
 			console.log($hitCell);
@@ -429,9 +429,13 @@ var main = function(username, turn){
 					timeout: 5000,
 					killer: true
 				});
+
+				if(result.playerLife === 0){
+					socket.emit("game over", {"winner": username});
+				}
 			}
 
-		} else {
+		} else { //Miss.
 			//Place peg here(-). Update status board
 			console.log("No hit: " + result.loc);
 			console.log($hitCell);
@@ -495,7 +499,49 @@ var main = function(username, turn){
 			turn = false;
 		}
 	});
+
+	socket.on("the end", function(results){
+		var winner = results.winner,
+			loser = results.loser;
+
+		if(username === winner){
+			console.log("You won the game!");
+
+			var n = noty({
+				text: "You Win!!!",
+				layout: "topRight",
+				type: "success",
+				theme: "relax",
+				animation: {
+					open: {height: "toggle"}, // jQuery animate function property object
+					close: {height: "toggle"}, // jQuery animate function property object
+					easing: "swing", // easing
+					speed: 500 // opening & closing animation speed
+				},
+				timeout: 5000,
+				killer: true
+			});
+		} else if(username === loser){
+			console.log("You lost the game!");
+
+			var n = noty({
+				text: "You Lose",
+				layout: "topRight",
+				type: "error",
+				theme: "relax",
+				animation: {
+					open: {height: "toggle"}, // jQuery animate function property object
+					close: {height: "toggle"}, // jQuery animate function property object
+					easing: "swing", // easing
+					speed: 500 // opening & closing animation speed
+				},
+				timeout: 5000,
+				killer: true
+			});
+		}
+	});
 };
+
 
 $(document).ready(function () {
   	"use strict";

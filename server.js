@@ -167,6 +167,23 @@ io.on("connection", function(socket){
 
 	});
 
+	socket.on("game over", function(result){
+		var winner = result.winner;
+		var indexOfWinner = connectedUsers.indexOf(winner);
+
+		console.log("Game Over");
+
+		if(indexOfWinner === 0){
+			console.log("Winner is " + connectedUsers[0]);
+			console.log("Loser is " + connectedUsers[1]);
+			io.emit("the end", {"winner": connectedUsers[0], "loser": connectedUsers[1]});
+		} else if(indexOfWinner === 1){
+			console.log("Winner is " + connectedUsers[1]);
+			console.log("Loser is " + connectedUsers[0]);
+			io.emit("the end", {"winner": connectedUsers[1], "loser": connectedUsers[0]});
+		}
+	});
+
 	socket.on("disconnect", function(){
 		numUsers--;
 		console.log(socket.username + " has logged out. " + numUsers + " logged in.")
