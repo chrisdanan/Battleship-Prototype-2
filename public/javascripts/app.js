@@ -11,11 +11,11 @@ var main = function(username, turn){
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
 	var ships = [
-					//{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
-					//{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
-					//{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
-					//{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
-					{"name": "patrol boat", "numPegs": 2, "set": "unset", "loc": []}
+					//{"name": "aircraft carrier", "numPegs": 5, "lives": 5, "set": "unset", "loc": []},
+					//{"name": "battleship", "numPegs": 4, "lives": 4, "set": "unset", "loc": []},
+					//{"name": "cruiser", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
+					//{"name": "submarine", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
+					{"name": "patrol boat", "numPegs": 2, "lives": 2, "set": "unset", "loc": []}
 				];
 
 	//Holds the cells that have already been taken by ship pegs.
@@ -23,7 +23,8 @@ var main = function(username, turn){
 	//Is it my turn?
 	//var turn = null;
 
-	var shipsLeft = ships.length;  //Used to keep track of how many ships are left to be placed on the grid.
+	var shipsLeft = ships.length;  //Used to keep track of how many ships the player has left to place on the board during the ship placement stage of the game.
+	var playerLife = ships.length;  //Used to keep track of how many ships the player has left on the board during gameplay.
 
 	//DOM elements that will be placed in the information section of the html page.
 	var $clickInfo = $("<p>").addClass("clickInfo").text("You clicked: ");
@@ -324,7 +325,9 @@ var main = function(username, turn){
 		 	$hitCell,
 		 	className;
 
-		//If attack is in closed_moves array.
+		 var destroyed = null; //Catch if a ship was destroyed due to this hit.
+
+		//If attack is in closed_moves array, it is a hit.
 		if(closed_moves.indexOf(attack) >= 0) {
 			//There is a hit
 			hit = true;
@@ -339,6 +342,40 @@ var main = function(username, turn){
 
 			$hitCell[0].className += " hit";
 
+			//Update ships object to subtract from lives.
+			//First, find the ship that is being attacked.
+			ships.forEach(function(ship){
+				if(ship.loc.indexOf(location) >= 0){
+					//Subtract the number of lives for that ship.
+					ship.lives = ship.lives - 1;
+
+					//If the number of lives for that ship is now 0, it is destroyed.
+					if(ship.lives === 0){
+						console.log("They destroyed your " + ship.name + "!");
+
+						//Alert the user that their ship has been destroyed.
+						var n = noty({
+							text: "They destroyed your " + ship.name + "!",
+							layout: "topRight",
+							type: "error",
+							theme: "relax",
+							animation: {
+								open: {height: "toggle"}, // jQuery animate function property object
+								close: {height: "toggle"}, // jQuery animate function property object
+								easing: "swing", // easing
+								speed: 500 // opening & closing animation speed
+							},
+							timeout: 5000,
+							killer: true
+						});	
+
+						destroyed = ship.name;  //Update destroyed variable.
+						playerLife = playerLife - 1;
+
+					}
+				}
+			});
+
 		} else if (closed_moves.indexOf(attack) === -1){
 			//There is a miss
 			hit = false;
@@ -349,15 +386,12 @@ var main = function(username, turn){
 
 			className = a + " " + b + " player";
 			$hitCell = document.getElementsByClassName(className);
-			
+
 			$hitCell[0].className += " miss";
 
 		}
 
-		socket.emit("attack result", {"hit": hit, "loc": location});
-		socket.on("start turn", function(result){
-			turn = result;
-		});
+		socket.emit("attack result", {"hit": hit, "loc": location, "destroyed": destroyed, "playerLife": playerLife});
 	});
 
 	//If your attack hit.
@@ -375,15 +409,37 @@ var main = function(username, turn){
 		$hitCell = document.getElementsByClassName(className);
 
 		//Update board.
-		if (result.hit === true) {
-			//Place peg here(O). Update status board.
+		if (result.hit === true) { //Hit.
+			//Place peg here(X). Update status board.
 			console.log("Hit: " + result.loc);
 			console.log($hitCell);
 			$hitCell[0].textContent = "X";
 			$hitCell[0].className += " hit";
 
-		} else {
-			//Place peg here(X). Update status board
+			if(result.destroyed !== null){
+				//Alert the user that their ship has been destroyed.
+				var n = noty({
+					text: "You destroyed their " + result.destroyed + "!",
+					layout: "topRight",
+					type: "error",
+					theme: "relax",
+					animation: {
+						open: {height: "toggle"}, // jQuery animate function property object
+						close: {height: "toggle"}, // jQuery animate function property object
+						easing: "swing", // easing
+						speed: 500 // opening & closing animation speed
+					},
+					timeout: 5000,
+					killer: true
+				});
+
+				if(result.playerLife === 0){
+					socket.emit("game over", {"winner": username});
+				}
+			}
+
+		} else { //Miss.
+			//Place peg here(-). Update status board
 			console.log("No hit: " + result.loc);
 			console.log($hitCell);
 			$hitCell[0].textContent = "-";
@@ -446,7 +502,49 @@ var main = function(username, turn){
 			turn = false;
 		}
 	});
+
+	socket.on("the end", function(results){
+		var winner = results.winner,
+			loser = results.loser;
+
+		if(username === winner){
+			console.log("You won the game!");
+
+			var n = noty({
+				text: "You Win!!!",
+				layout: "topRight",
+				type: "success",
+				theme: "relax",
+				animation: {
+					open: {height: "toggle"}, // jQuery animate function property object
+					close: {height: "toggle"}, // jQuery animate function property object
+					easing: "swing", // easing
+					speed: 500 // opening & closing animation speed
+				},
+				timeout: 5000,
+				killer: true
+			});
+		} else if(username === loser){
+			console.log("You lost the game!");
+
+			var n = noty({
+				text: "You Lose",
+				layout: "topRight",
+				type: "error",
+				theme: "relax",
+				animation: {
+					open: {height: "toggle"}, // jQuery animate function property object
+					close: {height: "toggle"}, // jQuery animate function property object
+					easing: "swing", // easing
+					speed: 500 // opening & closing animation speed
+				},
+				timeout: 5000,
+				killer: true
+			});
+		}
+	});
 };
+
 
 $(document).ready(function () {
   	"use strict";
