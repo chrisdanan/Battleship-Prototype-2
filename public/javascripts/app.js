@@ -302,7 +302,7 @@ var main = function(username, turn){
 
 			socket.emit("attack", $clickedCell);
 
-			socket.emit("end turn", "");
+			socket.emit("end turn", username);
 			console.log("ターンエンド。");
 			turn = false;
 		}
@@ -379,6 +379,16 @@ var main = function(username, turn){
 			turn = true;
 		} else{
 			console.log("It's not your turn");
+			turn = false;
+		}
+	});
+
+	socket.on("next turn", function(turnData){
+		if(turnData.activePlayer === username){
+			console.log("It is now your turn.");
+			turn = true;
+		} else{
+			console.log("Now you must wait for the other player.");
 			turn = false;
 		}
 	});
