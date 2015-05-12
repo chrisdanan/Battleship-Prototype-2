@@ -401,6 +401,22 @@ var main = function(username, turn){
 
 	socket.on("next turn", function(turnData){
 		if(turnData.activePlayer === username){
+			//Noty alert.
+			var n = noty({
+				text: "It is now your turn",
+				layout: "topRight",
+				type: "success",
+				theme: "relax",
+				animation: {
+					open: {height: "toggle"}, // jQuery animate function property object
+					close: {height: "toggle"}, // jQuery animate function property object
+					easing: "swing", // easing
+					speed: 500 // opening & closing animation speed
+				},
+				timeout: 5000,
+				killer: true
+			});
+			
 			console.log("It is now your turn.");
 			turn = true;
 		} else{
