@@ -317,6 +317,11 @@ var main = function(username, turn){
 		var index = -1;  //If attack is hit, then it has index in closed_moves; else, index is less than 0.
 		var location;  //Location of hit.
 
+		var a,
+		 	b,
+		 	$hitCell,
+		 	className;
+
 		//If attack is in closed_moves array.
 		if(closed_moves.indexOf(attack) >= 0) {
 			//There is a hit
@@ -324,12 +329,26 @@ var main = function(username, turn){
 			index = closed_moves.indexOf(attack);
 			location = closed_moves[index];
 
-			//Place peg here. Update values on Board
+			a = location.charAt(0);
+			b = location.substring(1);
+
+			className = a + " " + b + " player";
+			$hitCell = document.getElementsByClassName(className);
+
+			$hitCell[0].className += " hit";
 
 		} else if (closed_moves.indexOf(attack) === -1){
 			//There is a miss
 			hit = false;
 			location = attack;
+
+			a = location.charAt(0);
+			b = location.substring(1);
+
+			className = a + " " + b + " player";
+			$hitCell = document.getElementsByClassName(className);
+			
+			$hitCell[0].className += " miss";
 
 		}
 
@@ -416,7 +435,7 @@ var main = function(username, turn){
 				timeout: 5000,
 				killer: true
 			});
-			
+
 			console.log("It is now your turn.");
 			turn = true;
 		} else{
