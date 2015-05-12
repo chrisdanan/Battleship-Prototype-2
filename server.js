@@ -147,9 +147,24 @@ io.on("connection", function(socket){
 					playerToGoNext = connectedUsers[0];
 				}
 
+				console.log("It is " + playerToGoFirst + "'s turn first.");
 				io.emit("first turn", {"personFirst": playerToGoFirst});
 			}
 		});
+	});
+
+	socket.on("end turn", function(player){
+
+		var indexOfPlayer = connectedUsers.indexOf(player);
+
+		if(indexOfPlayer === 0){
+			console.log("It is now player " + connectedUsers[1] + "'s turn.");
+			io.emit("next turn", {"activePlayer": connectedUsers[1], "inactivePlayer": connectedUsers[0]});
+		} else if(indexOfPlayer === 1){
+			console.log("It is now player " + connectedUsers[0] + "'s turn.");
+			io.emit("next turn", {"activePlayer": connectedUsers[0], "inactivePlayer": connectedUsers[1]});
+		}
+
 	});
 
 	socket.on("disconnect", function(){
