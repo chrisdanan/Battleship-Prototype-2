@@ -131,9 +131,9 @@ li.ship:hover{
 }
 
 .hit{
-	background-color: blue;
+	background-color: red;
 }
 
 .miss{
-	background-color: red;
+	background-color: blue;
 }

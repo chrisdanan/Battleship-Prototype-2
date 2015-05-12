@@ -357,14 +357,14 @@ var main = function(username, turn){
 			//Place peg here(O). Update status board.
 			console.log("Hit: " + result.loc);
 			console.log($hitCell);
-			$hitCell[0].textContent = "O";
+			$hitCell[0].textContent = "X";
 			$hitCell[0].className += " hit";
 
 		} else {
 			//Place peg here(X). Update status board
 			console.log("No hit: " + result.loc);
 			console.log($hitCell);
-			$hitCell[0].textContent = "X";
+			$hitCell[0].textContent = "-";
 			$hitCell[0].className += " miss";
 		} 
 	});
