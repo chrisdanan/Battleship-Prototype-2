@@ -11,11 +11,11 @@ var main = function(username, turn){
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
 	var ships = [
-					//{"name": "aircraft carrier", "numPegs": 5, "set": "unset", "loc": []},
-					//{"name": "battleship", "numPegs": 4, "set": "unset", "loc": []},
-					//{"name": "cruiser", "numPegs": 3, "set": "unset", "loc": []},
-					//{"name": "submarine", "numPegs": 3, "set": "unset", "loc": []},
-					{"name": "patrol boat", "numPegs": 2, "set": "unset", "loc": []}
+					//{"name": "aircraft carrier", "numPegs": 5, "lives": 5, "set": "unset", "loc": []},
+					//{"name": "battleship", "numPegs": 4, "lives": 4, "set": "unset", "loc": []},
+					//{"name": "cruiser", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
+					//{"name": "submarine", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
+					{"name": "patrol boat", "numPegs": 2, "lives": 2, "set": "unset", "loc": []}
 				];
 
 	//Holds the cells that have already been taken by ship pegs.
@@ -322,7 +322,9 @@ var main = function(username, turn){
 		 	$hitCell,
 		 	className;
 
-		//If attack is in closed_moves array.
+		 var destroyed = null; //Catch if a ship was destroyed due to this hit.
+
+		//If attack is in closed_moves array, it is a hit.
 		if(closed_moves.indexOf(attack) >= 0) {
 			//There is a hit
 			hit = true;
@@ -337,6 +339,38 @@ var main = function(username, turn){
 
 			$hitCell[0].className += " hit";
 
+			//Update ships object to subtract from lives.
+			//First, find the ship that is being attacked.
+			ships.forEach(function(ship){
+				if(ship.loc.indexOf(location) >= 0){
+					//Subtract the number of lives for that ship.
+					ship.lives = ship.lives - 1;
+
+					//If the number of lives for that ship is now 0, it is destroyed.
+					if(ship.lives === 0){
+						console.log("They destroyed your " + ship.name + "!");
+
+						//Alert the user that their ship has been destroyed.
+						var n = noty({
+							text: "They destroyed your " + ship.name + "!",
+							layout: "topRight",
+							type: "error",
+							theme: "relax",
+							animation: {
+								open: {height: "toggle"}, // jQuery animate function property object
+								close: {height: "toggle"}, // jQuery animate function property object
+								easing: "swing", // easing
+								speed: 500 // opening & closing animation speed
+							},
+							timeout: 5000,
+							killer: true
+						});	
+
+						destroyed = ship.name;
+					}
+				}
+			});
+
 		} else if (closed_moves.indexOf(attack) === -1){
 			//There is a miss
 			hit = false;
@@ -347,12 +381,12 @@ var main = function(username, turn){
 
 			className = a + " " + b + " player";
 			$hitCell = document.getElementsByClassName(className);
-			
+
 			$hitCell[0].className += " miss";
 
 		}
 
-		socket.emit("attack result", {"hit": hit, "loc": location});
+		socket.emit("attack result", {"hit": hit, "loc": location, "destroyed": destroyed});
 		socket.on("start turn", function(result){
 			turn = result;
 		});
@@ -373,14 +407,32 @@ var main = function(username, turn){
 
 		//Update board.
 		if (result.hit === true) {
-			//Place peg here(O). Update status board.
+			//Place peg here(X). Update status board.
 			console.log("Hit: " + result.loc);
 			console.log($hitCell);
 			$hitCell[0].textContent = "X";
 			$hitCell[0].className += " hit";
 
+			if(result.destroyed !== null){
+				//Alert the user that their ship has been destroyed.
+				var n = noty({
+					text: "You destroyed their " + result.destroyed + "!",
+					layout: "topRight",
+					type: "error",
+					theme: "relax",
+					animation: {
+						open: {height: "toggle"}, // jQuery animate function property object
+						close: {height: "toggle"}, // jQuery animate function property object
+						easing: "swing", // easing
+						speed: 500 // opening & closing animation speed
+					},
+					timeout: 5000,
+					killer: true
+				});
+			}
+
 		} else {
-			//Place peg here(X). Update status board
+			//Place peg here(-). Update status board
 			console.log("No hit: " + result.loc);
 			console.log($hitCell);
 			$hitCell[0].textContent = "-";
