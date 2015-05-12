@@ -262,6 +262,7 @@ var main = function(username, turn){
 		$("#readyDiv").append($playButton);
 		//});
 		socket.emit("save state", data);
+		$readyBtn.hide();
 	});
 
 	$playButton.on("click", function(){
@@ -295,7 +296,8 @@ var main = function(username, turn){
 	//If it is your turn, then you are able to click the enemy grid to make an attack.
 	//Listen to player clicking enemy grid cell.
 	$("td#enemy #grid td").click(function(cell){
-		if(turn === true){
+		if(turn === true && !(cell.target.classList.contains("hit")) && !(cell.target.classList.contains("miss"))){
+			console.log(cell.target.classList.contains("miss"));
 			var $clickedCell = $(cell.target).attr("id"); //Get the id of the clicked cell.
 
 			console.log("Clicked enemy cell: " + $clickedCell);
@@ -368,6 +370,7 @@ var main = function(username, turn){
 		//Split up the ID to get a working class name;
 		a = result.loc.charAt(0);
 		b = result.loc.substring(1);
+
 		className = a + " " + b + " enemy";
 		$hitCell = document.getElementsByClassName(className);
 
