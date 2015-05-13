@@ -1,6 +1,7 @@
+//Thanks to Tyler Crane for alerting us to Noty.
+
 // Client-side code
 /* jshint browser: true, jquery: true, curly: true, eqeqeq: true, forin: true, immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: double, strict: true, undef: true, unused: true */
-
 
 var main = function(username, turn){
 	"use strict";
@@ -11,10 +12,10 @@ var main = function(username, turn){
 	//++++++++++++++++++++++++VARIABLE DECLARATION++++++++++++++++++++++++++++++++++++
 	//List of ships allowed in the game.
 	var ships = [
-					//{"name": "aircraft carrier", "numPegs": 5, "lives": 5, "set": "unset", "loc": []},
-					//{"name": "battleship", "numPegs": 4, "lives": 4, "set": "unset", "loc": []},
-					//{"name": "cruiser", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
-					//{"name": "submarine", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
+					{"name": "aircraft carrier", "numPegs": 5, "lives": 5, "set": "unset", "loc": []},
+					{"name": "battleship", "numPegs": 4, "lives": 4, "set": "unset", "loc": []},
+					{"name": "cruiser", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
+					{"name": "submarine", "numPegs": 3, "lives": 3, "set": "unset", "loc": []},
 					{"name": "patrol boat", "numPegs": 2, "lives": 2, "set": "unset", "loc": []}
 				];
 
@@ -261,9 +262,9 @@ var main = function(username, turn){
 
 		//Append the play button to the html page.
 		$("#readyDiv").append($playButton);
-		//});
-		socket.emit("save state", data);
-		$readyBtn.hide();
+
+		socket.emit("save state", data);  //Tell when you have finished placing ships on the grid.
+		$readyBtn.hide();  //Hide the ready button to prevent multiple clicks.
 	});
 
 	$playButton.on("click", function(){
@@ -320,10 +321,10 @@ var main = function(username, turn){
 		var index = -1;  //If attack is hit, then it has index in closed_moves; else, index is less than 0.
 		var location;  //Location of hit.
 
-		var a,
-		 	b,
-		 	$hitCell,
-		 	className;
+		var a,  //Used to get classname.
+		 	b,  //Used to get classname.
+		 	$hitCell,  //The cell that was hit.
+		 	className;  //Used to get the cell that was hit.
 
 		 var destroyed = null; //Catch if a ship was destroyed due to this hit.
 
@@ -479,7 +480,7 @@ var main = function(username, turn){
 
 	socket.on("next turn", function(turnData){
 		if(turnData.activePlayer === username){
-			//Noty alert.
+			//Noty alert.  Alert the user that it is their turn.
 			var n = noty({
 				text: "It is now your turn",
 				layout: "topRight",
@@ -491,7 +492,7 @@ var main = function(username, turn){
 					easing: "swing", // easing
 					speed: 500 // opening & closing animation speed
 				},
-				timeout: false,
+				timeout: 5000,
 				killer: true
 			});
 
@@ -510,6 +511,7 @@ var main = function(username, turn){
 		if(username === winner){
 			console.log("You won the game!");
 
+			//Alert the user that they won the game.
 			var n = noty({
 				text: "You Win!!!",
 				layout: "center",
@@ -527,6 +529,7 @@ var main = function(username, turn){
 		} else if(username === loser){
 			console.log("You lost the game!");
 
+			//Alert the user that they lost the game.
 			var n = noty({
 				text: "You Lose",
 				layout: "center",
@@ -555,7 +558,7 @@ $(document).ready(function () {
 	var turn = null;
 	var username = window.prompt("Please enter your nickname", "");
 	if(username === null || username === "") {
-		username = "User";
+		username = "User";  //Default user name.
 	}
 	main(username, turn);
 });
