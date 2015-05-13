@@ -58,7 +58,8 @@ var initializeTurn = function(){
 //Routes:
 //Route for homepage.
 app.get("/", function(req, res){
-	res.render("index", {title: "Battleship Prototype The Movie:The Game"});
+	//res.render("index", {title: "Battleship Prototype The Movie:The Game"});
+	res.render("login", {title: "Flippin' Ships Login Page"});
 });
 
 app.get("/register", function(req, res){
@@ -83,7 +84,7 @@ app.post("/login_verification", function(req, res){
 
 		if(data.length === 1){ //A user was found in the database.
 			console.log("Found user " + data[0].userName);
-			res.render("index", {title: "Battleship Prototype The Movie:The Game", username: userName});
+			res.render("game", {title: "Battleship Prototype The Movie:The Game", username: userName});
 		} else{  //The user was not found.
 			console.log("Cannot find user.");
 		}
