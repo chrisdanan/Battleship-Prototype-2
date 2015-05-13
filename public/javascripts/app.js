@@ -553,7 +553,7 @@ $(document).ready(function () {
   	"use strict";
   	//Is it my turn; Set it outside, where the variable can't be changed.
 	var turn = null;
-	var username = window.prompt("Please enter your Username", "");
+	var username = window.prompt("Please enter your nickname", "");
 	if(username === null || username === "") {
 		username = "User";
 	}

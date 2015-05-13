@@ -83,7 +83,7 @@ app.post("/login_verification", function(req, res){
 
 		if(data.length === 1){ //A user was found in the database.
 			console.log("Found user " + data[0].userName);
-			res.render("index", {title: "Battleship Prototype The Movie:The Game"});
+			res.render("index", {title: "Battleship Prototype The Movie:The Game", username: userName});
 		} else{  //The user was not found.
 			console.log("Cannot find user.");
 		}
@@ -139,7 +139,7 @@ io.on("connection", function(socket){
 		//console.log(socket.ships);
 
 		console.log(data);
-		/*
+		
 		PlayerModel.update({"username": socket.username}, {$set: {"ships": data.ships, "closed_moves": data.closed_moves}}, function(err, results){
 			if(err){
 				console.log("ERROR: " + err);
@@ -147,7 +147,7 @@ io.on("connection", function(socket){
 			}
 
 			console.log(results);
-		});*/
+		});
 	});
 
 	socket.on("attack", function(attack){

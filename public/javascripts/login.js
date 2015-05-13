@@ -10,11 +10,11 @@ var main = function(){
 		$passWordLabel = $("<label>").attr("for", "passWord").text("Password"),
 		$registerButton = $("<button>").text("Register");
 
-	$("#login-form, #register-form").append($userNameLabel);
-	$("#login-form, #register-form").append($userName);
-	$("#login-form, #register-form").append($passWordLabel);
-	$("#login-form, #register-form").append($password);
-	$("#login-form").append($submitButton);
+	$("#register-form").append($userNameLabel);
+	$("#register-form").append($userName);
+	$("#register-form").append($passWordLabel);
+	$("#register-form").append($password);
+	//$("#login-form").append($submitButton);
 
 	$("#register-form").append($registerButton);
 
@@ -26,6 +26,8 @@ var main = function(){
 
 		$.post("/login_verification", {"userName": uName, "passWord": pWord}, function(res){
 			console.log("Got a response back from the server.");
+
+			console.log(res.message);
 		});
 
 		$userName.val("");
