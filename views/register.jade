@@ -1,0 +1,13 @@
+extends ./layout.jade
+
+block title
+	title #{title}
+
+block content
+	h1 Registration
+	p Please enter your username and password.
+	div#register-form
+	div#results
+	a(href="/login") Click here to go back to login page.
+block pageSpecificScripts
+	script(src="javascripts/login.js")

@@ -35,6 +35,11 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser());
 
 //Set up the schema.
+var UserSchema = mongoose.Schema({
+	userName: String,
+	passWord: String
+});
+
 var PlayerSchema = mongoose.Schema({
 	username: String,
 	ships: Array,
@@ -42,7 +47,9 @@ var PlayerSchema = mongoose.Schema({
 });
 
 //Set up the variable to hold objects for the database.
+var UserModel = mongoose.model("UserModel", UserSchema);
 var PlayerModel = mongoose.model("PlayerModel", PlayerSchema);
+
 
 var initializeTurn = function(){
 	return Math.floor(Math.random() * 2 + 1) -1;
@@ -54,18 +61,52 @@ app.get("/", function(req, res){
 	res.render("index", {title: "Battleship Prototype The Movie:The Game"});
 });
 
-// //Route for saving the ship locations.
-// app.post("/saveShipLocations", function(req,res){
-// 	console.log("RECEIVED POST");
-// 	console.log(req.body);
+app.get("/register", function(req, res){
+	res.render("register", {title: "Flippin' Ships Registration Page"});
+});
 
-// 	res.send("");  //Send junk data.
-// });
+app.get("/login", function(req, res){
+	res.render("login", {title: "Flippin' Ships Login Page"});
+});
 
-////Route for loading the playing field.
-// app.get("/play", function(req, res){
-// 	res.render("play", {title: "Play"})
-// });
+app.post("/login_verification", function(req, res){
+	var userName = req.body.userName;
+	var passWord = req.body.passWord;
+
+	console.log("Received a request from the client to /login_verfication");
+
+	UserModel.find({"userName": userName, "passWord": passWord}, function(err, data){
+		if(err){
+			console.log("ERROR " + err);
+			return;
+		}
+
+		if(data.length === 1){ //A user was found in the database.
+			console.log("Found user " + data[0].userName);
+			res.render("index", {title: "Battleship Prototype The Movie:The Game"});
+		} else{  //The user was not found.
+			console.log("Cannot find user.");
+		}
+	});
+});
+
+app.post("/registration", function(req, res){
+	var userName = req.body.userName;
+	var passWord = req.body.passWord;
+
+	console.log("Received request from client.");
+
+	var user = new UserModel({"userName": userName, "passWord": passWord});
+
+	user.save(function(err){
+		if(err){
+			console.log("ERROR: " + err);
+			return;
+		}
+	});
+
+	res.send({"message": "Successfully registered."});
+});
 
 //Game Rooms
 //Reference: https://github.com/Automattic/socket.io/blob/master/examples/chat/public/main.js
@@ -98,7 +139,7 @@ io.on("connection", function(socket){
 		//console.log(socket.ships);
 
 		console.log(data);
-
+		/*
 		PlayerModel.update({"username": socket.username}, {$set: {"ships": data.ships, "closed_moves": data.closed_moves}}, function(err, results){
 			if(err){
 				console.log("ERROR: " + err);
@@ -106,7 +147,7 @@ io.on("connection", function(socket){
 			}
 
 			console.log(results);
-		});
+		});*/
 	});
 
 	socket.on("attack", function(attack){

@@ -1,0 +1,14 @@
+extends ./layout.jade
+
+block title
+	title #{title}
+
+block content
+	h1 Welcome to Flippin' Boats
+	p Please login to play the game
+	div#login-form
+	a(href="/register") Click here to register for a new account.
+
+
+block pageSpecificScripts
+	script(src="javascripts/login.js")
