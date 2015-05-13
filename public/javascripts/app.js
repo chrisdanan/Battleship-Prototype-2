@@ -360,8 +360,8 @@ var main = function(username, turn){
 							type: "error",
 							theme: "relax",
 							animation: {
-								open: {height: "toggle"}, // jQuery animate function property object
-								close: {height: "toggle"}, // jQuery animate function property object
+								open: "animated fadeInLeft", // jQuery animate function property object
+								close: "animated fadeOutRight", // jQuery animate function property object
 								easing: "swing", // easing
 								speed: 500 // opening & closing animation speed
 							},
@@ -424,8 +424,8 @@ var main = function(username, turn){
 					type: "error",
 					theme: "relax",
 					animation: {
-						open: {height: "toggle"}, // jQuery animate function property object
-						close: {height: "toggle"}, // jQuery animate function property object
+						open: "animated fadeInRight", // jQuery animate function property object
+						close: "animated fadeOutRight", // jQuery animate function property object
 						easing: "swing", // easing
 						speed: 500 // opening & closing animation speed
 					},
@@ -460,8 +460,8 @@ var main = function(username, turn){
 				type: "success",
 				theme: "relax",
 				animation: {
-					open: {height: "toggle"}, // jQuery animate function property object
-					close: {height: "toggle"}, // jQuery animate function property object
+					open: "animated fadeInRight", // jQuery animate function property object
+					close: "animated fadeOutRight", // jQuery animate function property object
 					easing: "swing", // easing
 					speed: 500 // opening & closing animation speed
 				},
@@ -486,12 +486,12 @@ var main = function(username, turn){
 				type: "success",
 				theme: "relax",
 				animation: {
-					open: {height: "toggle"}, // jQuery animate function property object
-					close: {height: "toggle"}, // jQuery animate function property object
+					open: "animated fadeInRight", // jQuery animate function property object
+					close: "animated fadeOutRight", // jQuery animate function property object
 					easing: "swing", // easing
 					speed: 500 // opening & closing animation speed
 				},
-				timeout: 5000,
+				timeout: false,
 				killer: true
 			});
 
@@ -512,7 +512,7 @@ var main = function(username, turn){
 
 			var n = noty({
 				text: "You Win!!!",
-				layout: "topRight",
+				layout: "center",
 				type: "success",
 				theme: "relax",
 				animation: {
@@ -521,7 +521,7 @@ var main = function(username, turn){
 					easing: "swing", // easing
 					speed: 500 // opening & closing animation speed
 				},
-				timeout: 5000,
+				timeout: false,
 				killer: true
 			});
 		} else if(username === loser){
@@ -529,7 +529,7 @@ var main = function(username, turn){
 
 			var n = noty({
 				text: "You Lose",
-				layout: "topRight",
+				layout: "center",
 				type: "error",
 				theme: "relax",
 				animation: {
@@ -538,10 +538,13 @@ var main = function(username, turn){
 					easing: "swing", // easing
 					speed: 500 // opening & closing animation speed
 				},
-				timeout: 5000,
+				timeout: false,
 				killer: true
 			});
 		}
+
+		//Disable button clicks.
+		turn = false;
 	});
 };
 
