@@ -1,3 +1,6 @@
+// Server-side code
+/* jshint node: true, curly: true, eqeqeq: true, forin: true, immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: double, strict: true, undef: true, unused: true */
+
 "use strict";
 
 var express = require("express"),
@@ -126,7 +129,7 @@ io.on("connection", function(socket){
 				console.log("ERROR: " + err);
 				return;
 			}
-			console.log(connectedUsers)
+			console.log(connectedUsers);
 			connectedUsers.push(data[0].username);
 
 			console.log(connectedUsers);
@@ -186,7 +189,7 @@ io.on("connection", function(socket){
 
 	socket.on("disconnect", function(){
 		numUsers--;
-		console.log(socket.username + " has logged out. " + numUsers + " logged in.")
+		console.log(socket.username + " has logged out. " + numUsers + " logged in.");
 
 		if(connectedUsers.indexOf(socket.username) >= 0){
 			connectedUsers.splice(connectedUsers.indexOf(socket.username), 1);
@@ -195,4 +198,3 @@ io.on("connection", function(socket){
 	});
 
 });
-
