@@ -1,0 +1,21 @@
+//Thanks to Dennis Valbuena for login idea.
+extends ./layout.jade
+
+block title
+	title #{title}
+
+block content
+	h1 Welcome to Flippin' Boats
+	p Please login to play the game
+	div#login-form
+	form.form-signin(method="POST", action="/login_verification", name="loginForm")
+		label(for="userName") Username:
+		input#userName(type="text", name="userName")
+		label(for="passWord") Password:
+		input#passWord(type="password", name="passWord")
+		input(type="submit", value="Submit")
+	a(href="/register") Click here to register for a new account.
+
+
+block pageSpecificScripts
+	script(src="javascripts/login.js")
