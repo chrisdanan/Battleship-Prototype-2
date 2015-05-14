@@ -14,8 +14,19 @@ body{
 	margin: auto;
 }
 
+.container.player h2{
+	color: paleturquoise;
+	text-align: center;
+	margin-bottom: 10px;
+}
+.container.enemy h2{
+	color: mistyrose;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
 #player, #enemy {
-	width: 600px;
+	padding: 10px 50px 10px 50px;
 }
 
 #stat, #info {
@@ -23,7 +34,7 @@ body{
 }
 
 #grid th {
-	color: #bab1ba;
+	color: black;
 }
 
 #grid td, th{
@@ -32,10 +43,11 @@ body{
 }
 
 #grid td{
-	border: 1px solid black;
-	height:30px;
-	width:30px;
-	border-radius:15px;
+	border: 3px solid black;
+	height:15px;
+	width:15px;
+	border-radius:5px;
+	font-weight: bold;
 }
 
 #grid td:hover{
@@ -46,12 +58,19 @@ body{
 #grid-section{
 	float: left;
 	position: relative;
+	background-color: paleturquoise;
+	/*border: solid blue 5px;*/
+	border-radius: 5px;
+}
+
+td#enemy table#grid {
+	background-color: mistyrose;
+	border-radius: 5px; 
+	/*border: solid red 5px;*/
 }
 
 #info-section{
-	float: right;
-	position: relative;
-	right: 15%;
+	float: center;
 }
 
 #clicked{
@@ -67,11 +86,12 @@ body{
 
 #status-board{
 	font-size: 1.2em;
-	color: #bab1ba;
+	color: black;
 }
 
 #stat{
 	display: none;
+	float: center;
 }
 
 ul{
@@ -105,7 +125,7 @@ button.disabledButton{
 }
 
 .hoverPlacement{
-	background-color: red;
+	background-color: #47AAAA;
 }
 
 li.ship{
@@ -131,9 +151,9 @@ li.ship:hover{
 }
 
 .hit{
-	background-color: red;
+	background-color: #8A0000;
 }
 
 .miss{
-	background-color: blue;
+	background-color: #1919A3;
 }
